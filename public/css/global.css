@@ -1,0 +1,82 @@
+/* Global styles  */
+
+body {
+  overflow-x: hidden;
+}
+
+html * {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  color: #000;
+}
+
+.btn {
+  text-align: center;
+  background-color: #3bc0c3;
+  border-color: #3bc0c3;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  transition: 0.15s ease-in-out;
+}
+
+button:focus,
+button:hover,
+button:active,
+button:visited {
+  color: #fff !important;
+  background-color: #319898 !important;
+  border-color: #319898 !important;
+  outline: none !important;
+}
+
+button.active.focus,
+button.active:focus,
+button.active:hover,
+button:active.focus,
+button:active:focus,
+button:active:hover,
+.open>.dropdown-togglebutton.focus,
+.open>.dropdown-togglebutton:focus,
+.open>.dropdown-togglebutton:hover {
+  color: #fff;
+  background-color: #319898;
+  border-color: #319898;
+  outline: none;
+}
+
+
+/* Responsive styles */
+
+@media screen and (max-width: 480px) {
+  .main-container {
+    width: 290px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .main-container {
+    width: calc(100% - 50px);
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+@media screen and (min-width: 769px) and (max-width: 939px) {
+  .main-container {
+    width: calc(100% - 100px);
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+@media screen and (min-width: 940px) {
+  .main-container {
+    width: 800px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
