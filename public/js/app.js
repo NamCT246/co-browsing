@@ -1,55 +1,127 @@
 $(document).ready(function () {
+    
+    /**
+     * Connect to the websocket server
+     */
+    var socket = io.connect('http://localhost:9999');
 
-    // Get cart data
-    getCartItems();
+    /**
+     * Mouse move handlers
+     */
 
-    function getCartItems() {
-        $.ajax({
-            method: 'GET',
-            url: 'http://frontend-candidate.vaimo.com/nguyen.thanh/public/cart/get',
-            localCache: true,
-            cacheTTL: 1 / 60, // cache data in 1 minutes
-            cacheKey: 'cartData'
-        })
-        .done(function (res) {
-            insertCartData(res);
-        })
-        .fail(function (err) {
-            console.error(err);
+    // listen to local "mouse move" event.
+    $(document).on("mousemove", function(event) {
+        socket.emit('mouseMove', { mouseX: event.pageX, mouseY: event.pageY });
+    });
+
+    // Waiting for "mouse move" from other clients.
+    socket.on('onMouseMove', function (data) {
+        showMouseMove(data);
+    });
+
+    function showMouseMove(data) {
+        mover = $(document.createElement('div'))
+            .addClass('cursor')
+            .css({
+                'background-color': '#000',
+                'left': data.mouseMoveData.mouseX,
+                'top': data.mouseMoveData.mouseY
+            })
+            .html('&nbsp;');
+        $(document.body).append(mover);
+        mover.fadeOut(300, function() { 
+            $(this).remove(); 
         });
     }
 
-    // Insert cart data
-    function insertCartData(data) {
-        var itemHtml;
-        // Insert number of total items
-        $("#total-cart-items").append(data.totalItems);
+    /**
+     * Mouse click handlers
+     */
 
-        // Insert number of total price
-        $("#total-cart-price").append("&euro;" + data.totalPrice);
+    // listen to local "mouse click" event.
+    $(document).on("click", function(event) {
+        event.stopPropagation();
+        // var target = $(event.target);
+        console.log(elementLocation(event.target));
+        socket.emit('mouseClick', {
+            pageX: event.pageX,
+            pageY: event.pageY,
+            target: elementLocation(event.target)
+        });
+    });
 
-        // Insert items
-        for (var i = 0; i < data.items.length; i++) {
-            var item = data.items[i];
-            itemHtml =
-                '<div class="cart-item">\
-                    <div class="cart-item-image">\
-                        <img src="' + item.imgSrc + '" alt="Cart item image">\
-                    </div>\
-                    <div class="cart-item-inner-wrapper">\
-                        <div class="cart-item-name">' + item.name + '</div>\
-                        <div class="cart-item-quantity-and-price">\
-                            <span>' + item.qty + '</span> &times;\
-                            <span>&euro; ' + item.price + '</span>\
-                        </div>\
-                    </div>\
-                    <div class="cart-item-delete-button">\
-                        <i class="fa fa-times" aria-hidden="true"></i>\
-                    </div>\
-                </div>';
-            $("#cart-item").append(itemHtml);
-        }
+    // Waiting for "mouse click" from other clients.
+    socket.on('onMouseClick', function (data) {
+        showMouseClick(data);
+        triggerClick(data);
+    });
+
+    function showMouseClick(data) {
+        clicker = $(document.createElement('div'))
+            .addClass('cursor-click')
+            .css({
+                'background-color': 'yellow',
+                'left': data.mouseClickData.pageX,
+                'top': data.mouseClickData.pageY
+            })
+            .html('&nbsp;');
+        $(document.body).append(clicker);
+        clicker.fadeOut(300, function() { 
+            $(this).remove(); 
+        });
     }
+
+    function triggerClick(data) {
+        console.log(data.mouseClickData);
+        console.log(data.mouseClickData.target);
+        // $(data.mouseClickData.target).trigger("click");
+    }
+
+    function elementLocation(el) {
+        if (el instanceof $) {
+            // a jQuery element
+            el = el[0];
+        }
+        if (el[0] && el.attr && el[0].nodeType == 1) {
+            // Or a jQuery element not made by us
+            el = el[0];
+        }
+        if (el.id) {
+            return "#" + el.id;
+        }
+        if (el.tagName == "BODY") {
+            return "body";
+        }
+        if (el.tagName == "HEAD") {
+            return "head";
+        }
+        if (el === document) {
+            return "document";
+        }
+        var parent = el.parentNode;
+        if ((!parent) || parent == el) {
+            console.warn("elementLocation(", el, ") has null parent");
+            throw new Error("No locatable parent found");
+        }
+        var parentLocation = elementLocation(parent);
+        var children = parent.childNodes;
+        var _len = children.length;
+        var index = 0;
+        for (var i = 0; i < _len; i++) {
+            if (children[i] == el) {
+                break;
+            }
+            if (children[i].nodeType == document.ELEMENT_NODE) {
+                if (children[i].className.indexOf("togetherjs") != -1) {
+                    // Don't count our UI
+                    continue;
+                }
+                // Don't count text or comments
+                index++;
+            }
+        }
+        return parentLocation + ":nth-child(" + (index + 1) + ")";
+    };
 
     // Show cart by clicking
     $("#btn-show-menu").click(function () {

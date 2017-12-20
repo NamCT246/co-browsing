@@ -23,21 +23,40 @@
 		<link rel="stylesheet" href="css/navigation-bar.css">
         <link rel="stylesheet" href="css/content.css">
         <link rel="stylesheet" href="css/footer.css">
-
-        <!--  Widget Code -->
-        <script async src="https://s.tagove.com/a-1c5f8/init.js"></script>
-        <script async src="https://s.tagove.com/main.js"></script>
-        <noscript><a href="https://www.tagove.com?welcome" title="live chat software">Live chat software</a></noscript>
-        <!-- / Widget Code -->
+        <style type="text/css">
+            div.cursor {
+              height: 10px;
+              width: 10px;
+              border-radius: 5px;
+              position: absolute;
+            }
+            div.cursor-click {
+              height: 30px;
+              width: 30px;
+              border-radius: 10px;
+              position: absolute;
+            }
+        </style>
         
-        <!-- <script>
+         <!-- Widget Code -->
+        <!-- <script async src="https://s.tagove.com/a-1c5f8/init.js"></script>
+        <script async src="https://s.tagove.com/main.js"></script>
+        <noscript><a href="https://www.tagove.com?welcome" title="live chat software">Live chat software</a></noscript> -->
+        <!-- / Widget Code -->
+
+        <!-- Import custom JavaScript file -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+        <script src="js/app.js"></script>
+        <script async src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        <script>
             var TogetherJSConfig_youtube = true,
                 TogetherJSConfig_toolName = "NR co-browser",
                 TogetherJSConfig_suppressJoinConfirmation = true,
                 TogetherJSConfig_disableWebRTC = true;
             // more config...
         </script>
-        <script src="https://togetherjs.com/togetherjs-min.js"></script> -->
+        <script async src="https://togetherjs.com/togetherjs-min.js"></script>
 	</head>
 
 	<body>
@@ -74,7 +93,7 @@
 				</div> <!-- End logo and cart -->
                 <div class="navigation-wrapper" id="navigation-wrapper"> <!-- Navigation bar -->
                     <div class="navigation">
-                        <a>Women</a>
+                        <a href="/women">Women</a>
                         <a>Men</a>
                         <a>Junior</a>
                         <a>Accessories</a>
@@ -188,7 +207,7 @@
                         <div class="footer-content">
                             <div class="input-wrapper">
                                 <i class="fa fa-envelope-o"></i>
-                                <input id="email-input" type="email" placeholder="Enter your email address">
+                                <input id="email-input" type="text" placeholder="Enter your email address">
                             </div>
                             <button id="subscribe-newsletter" class="btn btn-default btn-subscribe">subscribe</button>
                         </div>
@@ -200,14 +219,10 @@
 	</body>
 
 	<!-- Import JQuery library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-	<!-- Import Bootstrap JS -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
-        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-		crossorigin="anonymous"></script>
 
-	<!-- Import custom JavaScript file -->
-	<script src="js/app.js"></script>
+
+
+
 
 </html>

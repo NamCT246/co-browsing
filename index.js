@@ -14,9 +14,21 @@ app.get('/', function (req, res) {
 });
 
 io.on('connection', function (socket) {
-  socket.on('click', function (data) {
-    console.log(data);
+  
+  socket.on('mouseMove', function (data) {
+    socket.broadcast.emit('onMouseMove', {
+      id: socket.id,
+      mouseMoveData: data
+    });
   });
+
+  socket.on('mouseClick', function (data) {
+    socket.broadcast.emit('onMouseClick', {
+      id: socket.id,
+      mouseClickData: data
+    });
+  });
+
 });
 
 const port = process.env.PORT || 9999;
