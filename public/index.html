@@ -1,75 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 
-	<head>
-		<meta charset="UTF-8">
-		<title>Vaimo Store</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <head>
+        <meta charset="UTF-8">
+        <title>Vaimo Store</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
         <!-- Import Open Sans Web-font -->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
 
-		<!-- Import Bootstrap CSS -->
+        <!-- Import Bootstrap CSS -->
         <link rel="stylesheet" 
             href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-		<!-- Import Font Awesome -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- Import Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-		<!-- Import custom CSS files -->
+        <!-- Import custom CSS files -->
         <link rel="stylesheet" href="css/global.css">
-		<link rel="stylesheet" href="css/header.css">
-		<link rel="stylesheet" href="css/navigation-bar.css">
+        <link rel="stylesheet" href="css/header.css">
+        <link rel="stylesheet" href="css/navigation-bar.css">
         <link rel="stylesheet" href="css/content.css">
         <link rel="stylesheet" href="css/footer.css">
         <style type="text/css">
             div.cursor {
-              height: 10px;
-              width: 10px;
-              border-radius: 5px;
-              position: absolute;
+                height: 12px;
+                width: 12px;
+                border-radius: 0px 4px 4px 4px;
+                position: absolute;
+                z-index: 9999;
+                box-shadow: 0 0 2px 1px #505050;
             }
             div.cursor-click {
-              height: 30px;
-              width: 30px;
-              border-radius: 10px;
-              position: absolute;
+                height: 30px;
+                width: 30px;
+                border-radius: 15px;
+                position: absolute;
+                z-index: 9998;
             }
         </style>
-        
+        <!-- TAGOVE SERVICE -->
          <!-- Widget Code -->
         <!-- <script async src="https://s.tagove.com/a-1c5f8/init.js"></script>
         <script async src="https://s.tagove.com/main.js"></script>
         <noscript><a href="https://www.tagove.com?welcome" title="live chat software">Live chat software</a></noscript> -->
         <!-- / Widget Code -->
-
-        <!-- Import custom JavaScript file -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-        <script src="js/app.js"></script>
-        <script async src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" crossorigin="anonymous"></script>
-        <script>
+        
+        <!-- TOGETHER JS SERVICE -->
+        <!-- <script>
             var TogetherJSConfig_youtube = true,
                 TogetherJSConfig_toolName = "NR co-browser",
                 TogetherJSConfig_suppressJoinConfirmation = true,
+                TogetherJSConfig_cloneClicks = true,
                 TogetherJSConfig_disableWebRTC = true;
             // more config...
         </script>
-        <script async src="https://togetherjs.com/togetherjs-min.js"></script>
-	</head>
+        <script async src="https://togetherjs.com/togetherjs-min.js"></script> -->
 
-	<body>
+        <!-- Using RequireJS -->
+        <script data-main="js/app" src="js/libs/require.js"></script>
+        
+    </head>
+
+    <body>
         <button onclick="TogetherJS(this); return false;">Start Co-browser</button>
-        <input type="text">
-        <button>Hahaha</button>
-		<header> <!-- Header -->
-			<div class="main-container"> <!-- Main container -->
-				<div class="logo-and-cart-wrapper"> <!-- Logo and cart -->
-					<a class="logo" href="/">
-						<img src="img/logo.png" alt="Vaimo store logo">
+        <header> <!-- Header -->
+            <div class="main-container"> <!-- Main container -->
+                <div class="logo-and-cart-wrapper"> <!-- Logo and cart -->
+                    <a class="logo" href="/">
+                        <img src="img/logo.png" alt="Vaimo store logo">
                     </a>
-					<div class="cart-wrapper-outer">
+                    <div class="cart-wrapper-outer">
                         <div class="cart-wrapper">
                             <a id="btn-show-cart" class="btn btn-show-cart">
                                 <i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>&nbsp;
@@ -90,7 +92,7 @@
                             <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
                         </a>
                     </div>
-				</div> <!-- End logo and cart -->
+                </div> <!-- End logo and cart -->
                 <div class="navigation-wrapper" id="navigation-wrapper"> <!-- Navigation bar -->
                     <div class="navigation">
                         <a href="/women">Women</a>
@@ -126,29 +128,29 @@
                         <a class="account">My account</a>
                     </div>
                 </div> <!-- End navigation bar -->
-			</div> <!-- End main container -->
-		</header> <!-- End Header -->
+            </div> <!-- End main container -->
+        </header> <!-- End Header -->
 
-		<div class="main-container"> <!-- Contents -->
-			<div class="splash-slogan-wrapper"> <!-- Splash and slogan -->
-				<div class="splash-wrapper">
-					<img src="img/splash.png" alt="" srcset="">
-				</div>
-				<div class="slogan-wrapper">
-					<div class="slogan-heading">
+        <div class="main-container"> <!-- Contents -->
+            <div class="splash-slogan-wrapper"> <!-- Splash and slogan -->
+                <div class="splash-wrapper">
+                    <img src="img/splash.png" alt="" srcset="">
+                </div>
+                <div class="slogan-wrapper">
+                    <div class="slogan-heading">
                         <p>This is Vaimo Store</p>
-					</div>
+                    </div>
 
-					<div class="slogan-sub-heading">
-						Your one-stop
-						<br>Fashion destination
-					</div>
-					<div class="slogan-description">
-						Shop from over 850 of the best brands, including VAIMO's own label. Plus, get your daily fix of the freshest style, celebrity
-						and music news.
-					</div>
-				</div>
-			</div> <!-- End splash and slogan -->
+                    <div class="slogan-sub-heading">
+                        Your one-stop
+                        <br>Fashion destination
+                    </div>
+                    <div class="slogan-description">
+                        Shop from over 850 of the best brands, including VAIMO's own label. Plus, get your daily fix of the freshest style, celebrity
+                        and music news.
+                    </div>
+                </div>
+            </div> <!-- End splash and slogan -->
             <div class="favourite-wrapper"> <!-- Favorite wrapper -->
                 <div class="favourite-title-wrapper">
                     <div class="favourite-divider"></div>
@@ -159,10 +161,10 @@
                 <div class="products">
                 </div>
             </div> <!-- End products wrapper -->
-		</div> <!-- End contents -->
+        </div> <!-- End contents -->
 
-		<footer> <!-- Footer -->
-			<div class="main-container">
+        <footer> <!-- Footer -->
+            <div class="main-container">
                 <div class="footer-inner-wrapper"> <!-- Footer inner wrapper -->
                     <div class="footer-component top-categories"> <!-- Top categories -->
                         <div class="footer-heading">top categories</div>
@@ -209,20 +211,71 @@
                                 <i class="fa fa-envelope-o"></i>
                                 <input id="email-input" type="text" placeholder="Enter your email address">
                             </div>
-                            <button id="subscribe-newsletter" class="btn btn-default btn-subscribe">subscribe</button>
+                            <button id="subscribe-newsletter" type="button" class="btn btn-default btn-subscribe">subscribe</button>
                         </div>
                         <div id="subscribe-notification" class="subscribe-notification"></div>
                     </div> <!-- End newsletter subscribe -->
                 </div>  <!-- End footer inner wrapper -->
-			</div>
-		</footer> <!-- End footer -->
-	</body>
-
-	<!-- Import JQuery library -->
-
-
-
-
-
-
+            </div>
+        </footer> <!-- End footer -->
+        <!-- <script>
+                $( document ).ready(function() {
+                    var signallingLocalServerAddr = "http://localhost:9999";
+                    var signallingHerokuServerAddr = "https://localhost:9999";
+                    var socket = io.connect({
+                        url: signallingLocalServerAddr
+                    });
+    
+                    document.addEventListener("click", function(){
+                        socket.emit('mouseClick', JSON.stringify({
+                            type: "mouse-click",
+                            element: 2,
+                            offsetX: event.pageX,
+                            offsetY: event.pageY
+                        }));
+                    });
+    
+                    // $("#subscribe-newsletter").click(function (event) {
+                    //     // Prevent click event from repeating between clients.
+                    //     console.log(event.internalClick);
+                    //     // if (event.internalClick) {
+                    //     //     return;
+                    //     // }
+    
+                    //     socket.emit('mouseClick', JSON.stringify({
+                    //         type: "mouse-click",
+                    //         element: 2,
+                    //         offsetX: event.pageX,
+                    //         offsetY: event.pageY
+                    //     }));
+                    // });
+            
+                    // Waiting for "mouse click" from other clients.
+                    socket.on('onMouseClick', function (data) {
+    
+                        $(target).trigger({
+                            type: "click",
+                            internalClick: true
+                        });
+                        showMouseClick(200, 200);
+                    });
+                
+                    function showMouseClick(top, left) {
+                        clicker = $(document.createElement('div'))
+                            .addClass('cursor-click')
+                            .css({
+                                'background-color': 'yellow',
+                                'top': top - 15,
+                                'left': left - 15
+                            })
+                            .html('&nbsp;');
+                        $(document.body).append(clicker);
+                        clicker.fadeOut(1500, function() { 
+                            $(this).remove(); 
+                        });
+                    }
+                });
+                
+            </script> -->
+    </body>
 </html>

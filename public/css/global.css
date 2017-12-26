@@ -78,5 +78,6 @@ button:active:hover,
     width: 800px;
     margin-right: auto;
     margin-left: auto;
+    height: 500px;
   }
 }
