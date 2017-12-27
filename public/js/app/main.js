@@ -213,9 +213,6 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
         function _scrollRefresh() {
             scrollTimeout = null;
             scrollTimeoutSet = 0;
-            //   Cursor.forEach(function (c) {
-            //     c.refresh();
-            //   });
             console.log(elementFinder.elementByPixel($(window).scrollTop()));
             lastScrollMessage = {
                 type: "scroll-update",
@@ -226,8 +223,8 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
         }
 
         socket.on("onMouseScroll", function (data) {
-            $(window).scrollTo($(data.mouseScrollData.absoluteTop), 500);
-            // window.scrollTo(0, data.mouseScrollData.absoluteTop);
+            console.log(data.mouseScrollData.position.absoluteTop);
+            $(window).scrollTop( data.mouseScrollData.position.absoluteTop );
         });
     });
 });
