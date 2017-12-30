@@ -64,7 +64,13 @@
     </head>
 
     <body>
-        <button onclick="TogetherJS(this); return false;">Start Co-browser</button>
+        <!-- <button onclick="TogetherJS(this)">Start Co-browser</button> -->
+
+        <button id="createSession">Create session</button>
+        <input type="text" value="" id="roomName"></input>
+        <button id="joinSession">Join session</button>
+        <input type="text" value="" id="joinRoom"></input>
+        
         <header> <!-- Header -->
             <div class="main-container"> <!-- Main container -->
                 <div class="logo-and-cart-wrapper"> <!-- Logo and cart -->
@@ -218,64 +224,5 @@
                 </div>  <!-- End footer inner wrapper -->
             </div>
         </footer> <!-- End footer -->
-        <!-- <script>
-                $( document ).ready(function() {
-                    var signallingLocalServerAddr = "http://localhost:9999";
-                    var signallingHerokuServerAddr = "https://localhost:9999";
-                    var socket = io.connect({
-                        url: signallingLocalServerAddr
-                    });
-    
-                    document.addEventListener("click", function(){
-                        socket.emit('mouseClick', JSON.stringify({
-                            type: "mouse-click",
-                            element: 2,
-                            offsetX: event.pageX,
-                            offsetY: event.pageY
-                        }));
-                    });
-    
-                    // $("#subscribe-newsletter").click(function (event) {
-                    //     // Prevent click event from repeating between clients.
-                    //     console.log(event.internalClick);
-                    //     // if (event.internalClick) {
-                    //     //     return;
-                    //     // }
-    
-                    //     socket.emit('mouseClick', JSON.stringify({
-                    //         type: "mouse-click",
-                    //         element: 2,
-                    //         offsetX: event.pageX,
-                    //         offsetY: event.pageY
-                    //     }));
-                    // });
-            
-                    // Waiting for "mouse click" from other clients.
-                    socket.on('onMouseClick', function (data) {
-    
-                        $(target).trigger({
-                            type: "click",
-                            internalClick: true
-                        });
-                        showMouseClick(200, 200);
-                    });
-                
-                    function showMouseClick(top, left) {
-                        clicker = $(document.createElement('div'))
-                            .addClass('cursor-click')
-                            .css({
-                                'background-color': 'yellow',
-                                'top': top - 15,
-                                'left': left - 15
-                            })
-                            .html('&nbsp;');
-                        $(document.body).append(clicker);
-                        clicker.fadeOut(1500, function() { 
-                            $(this).remove(); 
-                        });
-                    }
-                });
-                
-            </script> -->
     </body>
 </html>

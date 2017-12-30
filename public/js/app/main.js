@@ -1,6 +1,4 @@
-define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"], function (require, $, scrollTo, socket, elementFinder, eventMaker) {
-
-    require(["subscribe-newsletter"]);
+define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker", "sessionManager"], function (require, $, scrollTo, socket, elementFinder, eventMaker, session) {
 
     $(document).ready(function () {
 
@@ -8,11 +6,31 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
          * Connect to the signalling server *
          ************************************/
 
-        socket.on('onUserDisconnected', function (data) {
-            console.log("User ID: " + data.id + " has disconnected.");
-            removeCursor(data.id);
-        });
+        var currentRoom;
 
+
+        socket.connection.on('message', function (msg) {
+            console.log(msg);
+        })
+        
+        socket.connection.on('leaveRoom', function (data) {
+            console.log("User " + data.username + " has just left the room");
+            removeCursor(data.id);
+        })
+
+        socket.connection.on('success', function (room) {
+            currentRoom = room;
+        })        
+
+        /************************
+         * Button handlers *
+         ************************/
+        
+        
+
+       
+
+        // todo: remove old cursor after leaving and entering new room.
         function removeCursor(id) {
             var cursorId = "#cursor" + id;
             $(cursorId).remove();
@@ -53,9 +71,10 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
                 lastMessage = {
                     type: "mouse-move",
                     top: pageY,
-                    left: pageX
+                    left: pageX,
+                    room: currentRoom
                 };
-                socket.emit('mouseMove', lastMessage);
+                socket.connection.emit('mouseMove', lastMessage);
                 return;
             }
             target = $(target);
@@ -70,13 +89,14 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
                 type: "mouse-move",
                 element: elementFinder.elementLocation(target),
                 offsetX: Math.floor(offsetX),
-                offsetY: Math.floor(offsetY)
+                offsetY: Math.floor(offsetY),
+                room: currentRoom
             };
-            socket.emit('mouseMove', lastMessage);
+            socket.connection.emit('mouseMove', lastMessage);
         }
 
         // Remote "mouse move" event.
-        socket.on('onMouseMove', function (data) {
+        socket.connection.on('onMouseMove', function (data) {
             if ($.inArray(data.id, createdUsers) === -1) {
                 createCursor(data.id);
             }
@@ -144,16 +164,17 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
             var offsetX = event.pageX - offset.left;
             var offsetY = event.pageY - offset.top;
 
-            socket.emit('mouseClick', {
+            socket.connection.emit('mouseClick', {
                 type: "mouse-click",
                 element: location,
                 offsetX: offsetX,
-                offsetY: offsetY
+                offsetY: offsetY,
+                room: currentRoom
             });
         });
 
         // Waiting for "mouse click" from other clients.
-        socket.on('onMouseClick', function (data) {
+        socket.connection.on('onMouseClick', function (data) {
             var target = $(elementFinder.findElement(data.mouseClickData.element));
             var offset = target.offset();
             var top = offset.top + data.mouseClickData.offsetY;
@@ -216,15 +237,39 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
             console.log(elementFinder.elementByPixel($(window).scrollTop()));
             lastScrollMessage = {
                 type: "scroll-update",
-                position: elementFinder.elementByPixel($(window).scrollTop())
+                position: elementFinder.elementByPixel($(window).scrollTop()),
+                room: currentRoom
             };
 
-            socket.emit("mouseScroll", lastScrollMessage);
+            socket.connection.emit("mouseScroll", lastScrollMessage);
         }
 
-        socket.on("onMouseScroll", function (data) {
+        socket.connection.on("onMouseScroll", function (data) {
             console.log(data.mouseScrollData.position.absoluteTop);
             $(window).scrollTop( data.mouseScrollData.position.absoluteTop );
         });
+
+        /************************
+         * Input handlers *
+         ************************/
+        
+        $(document).on('input', function(event){     
+            var el = event.target,
+                elValue = $(el).val();       
+            
+            var location = elementFinder.elementLocation(el);
+            console.log(currentRoom);
+            socket.connection.emit('inputChanged', {
+                'location': location,
+                'value': elValue,
+                'room': currentRoom
+            })
+        })
+
+        socket.connection.on('onInputChanged', function(data){
+            console.log(data, data.inputData.location);
+            var el = elementFinder.findElement(data.inputData.location);
+            $(el).val(data.inputData.value);
+        })
     });
 });
