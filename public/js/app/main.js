@@ -19,16 +19,13 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
         })
 
         socket.connection.on('success', function (room) {
+            console.log("Successfully joined " + room);
             currentRoom = room;
         })        
 
         /************************
          * Button handlers *
          ************************/
-        
-        
-
-       
 
         // todo: remove old cursor after leaving and entering new room.
         function removeCursor(id) {
@@ -54,6 +51,7 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
             lastTime = now;
             var pageX = event.pageX,
                 pageY = event.pageY;
+
             if (Math.abs(lastPosX - pageX) < 3 && Math.abs(lastPosY - pageY) < 3) {
                 // Not a substantial enough change
                 return;
@@ -61,12 +59,7 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
             lastPosX = pageX;
             lastPosY = pageY;
             var target = event.target;
-            // var parent = $(target).closest(".togetherjs-window, .togetherjs-popup, #togetherjs-dock");
-            // if (parent.length) {
-            //     target = parent[0];
-            // } else if (elementFinder.ignoreElement(target)) {
-            //     target = null;
-            // }
+
             if ((!target) || target == document.documentElement || target == document.body) {
                 lastMessage = {
                     type: "mouse-move",
@@ -79,12 +72,15 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
             }
             target = $(target);
             var offset = target.offset();
+
             if (!offset) {
                 console.warn("Could not get offset of element:", target[0]);
                 return;
             }
+
             var offsetX = pageX - offset.left;
             var offsetY = pageY - offset.top;
+
             lastMessage = {
                 type: "mouse-move",
                 element: elementFinder.elementLocation(target),
@@ -97,14 +93,17 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
 
         // Remote "mouse move" event.
         socket.connection.on('onMouseMove', function (data) {
+
             if ($.inArray(data.id, createdUsers) === -1) {
                 createCursor(data.id);
             }
+
             showMouseMove(data.mouseMoveData, data.id);
         });
 
         function createCursor(id) {
             createdUsers.push(id);
+
             var cursorId = 'cursor' + id;
             var cursor = $(document.createElement('div'))
                 .attr('id', cursorId)
@@ -115,11 +114,13 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
                     'top': '50%'
                 })
                 .html('&nbsp;');
+
             $(document.body).append(cursor);
         }
 
         function showMouseMove(pos, userId) {
             var top, left;
+            
             if (pos.element) {
                 var target = $(elementFinder.findElement(pos.element));
                 var offset = target.offset();
@@ -130,6 +131,7 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
                 top = pos.top;
                 left = pos.left;
             }
+
             setCursorPosition(userId, top, left);
         }
 
@@ -140,7 +142,6 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
                 'top': top
             });
         }
-
 
         /************************
          * Mouse click handlers *
