@@ -11,9 +11,8 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function (req, res) {
-  res.sendfile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/index.html');
 });
-
 
 /* 
 @rooms: array contains all the room, and users inside that room
@@ -44,7 +43,6 @@ io.on('connection', function (socket) {
   }
 
   function joinRoom(room) {
-    console.log(socket.id + " gonna join " + room);
     socket.join(room);
     updateRoom('join', room);
   }
@@ -67,14 +65,11 @@ io.on('connection', function (socket) {
 
       if (room.num_user > 0) {
         --room.num_user;
-        console.log("gonna leave room " + oldRoom, rooms);
       }
 
       if (room.num_user === 0) {
-        console.log("no user in room " + oldRoom + " left");
         var i = _.indexOf(rooms, room);
         rooms.splice(i, 1);
-        console.log(rooms);
       }
     } else {
       return;
@@ -126,41 +121,63 @@ io.on('connection', function (socket) {
     }
   }
 
-  socket.on('createRoom', function (room) {
+  socket.on('createRoom', function (room, ack) {
 
     if (currRoom && room !== currRoom) {
       leaveRoom(currRoom);
     }
 
     if (getRoomByName(room)) {
-      socket.to(socket.id).emit('message', 'Room already exist. Try creating a new one');
+      ack({
+        type: 'Abort',
+        reason:'Room already exist. Try creating a new one'
+      })
       return;
     }
 
     createRoom(room);
+    ack({
+      type: 'Ok',
+      room: room
+    });
   })
 
-  socket.on('joinRoom', function (room) {
+  socket.on('joinRoom', function (room, ack) {
 
     if (!getRoomByName(room)) {
-      socket.emit('message', 'Room not exist. Better create a new one');
+      ack({
+        type: 'Abort',
+        reason:'Room not exist. Better create a new one'
+      });
       return;
     }
 
     if (currRoom) {
-      if (room !== currRoom) {
-        leaveRoom(currRoom);
-        console.log(rooms);
+      if (room === currRoom) {
+       ack({
+         type: 'Abort',
+         reason: 'You are already in this room'
+        });
+        return;
       }
       else {
-        socket.to(socket.id).emit('message', 'You are already in this room');
-        return;
+        leaveRoom(currRoom);
       }
     }
 
     joinRoom(room);
-    // console.log(socket.id + " is now in " + currRoom);
-    console.log(rooms);
+    ack({
+      type: 'Ok',
+      room: room
+    });
+  });
+
+  socket.on('leaveRoom', function(room, ack){
+    leaveRoom(room);
+    ack({
+      type: 'Ok',
+      room: room
+    })
   })
 
   socket.on('disconnect', function () {

@@ -1,228 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <title>Vaimo Store</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<head>
+  <meta charset="UTF-8">
+  <title>Vaimo Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-        <!-- Import Open Sans Web-font -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
+  <!-- Import Open Sans Web-font -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
 
-        <!-- Import Bootstrap CSS -->
-        <link rel="stylesheet" 
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- Import Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-        <!-- Import Font Awesome -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- Import Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-        <!-- Import custom CSS files -->
-        <link rel="stylesheet" href="css/global.css">
-        <link rel="stylesheet" href="css/header.css">
-        <link rel="stylesheet" href="css/navigation-bar.css">
-        <link rel="stylesheet" href="css/content.css">
-        <link rel="stylesheet" href="css/footer.css">
-        <style type="text/css">
-            div.cursor {
-                height: 12px;
-                width: 12px;
-                border-radius: 0px 4px 4px 4px;
-                position: absolute;
-                z-index: 9999;
-                box-shadow: 0 0 2px 1px #505050;
-            }
-            div.cursor-click {
-                height: 30px;
-                width: 30px;
-                border-radius: 15px;
-                position: absolute;
-                z-index: 9998;
-            }
-        </style>
-        <!-- TAGOVE SERVICE -->
-         <!-- Widget Code -->
-        <!-- <script async src="https://s.tagove.com/a-1c5f8/init.js"></script>
-        <script async src="https://s.tagove.com/main.js"></script>
-        <noscript><a href="https://www.tagove.com?welcome" title="live chat software">Live chat software</a></noscript> -->
-        <!-- / Widget Code -->
-        
-        <!-- TOGETHER JS SERVICE -->
-        <!-- <script>
-            var TogetherJSConfig_youtube = true,
-                TogetherJSConfig_toolName = "NR co-browser",
-                TogetherJSConfig_suppressJoinConfirmation = true,
-                TogetherJSConfig_cloneClicks = true,
-                TogetherJSConfig_disableWebRTC = true;
-            // more config...
-        </script>
-        <script async src="https://togetherjs.com/togetherjs-min.js"></script> -->
+  <!-- Import custom CSS files -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/navigation-bar.css">
+  <link rel="stylesheet" href="css/content.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <style type="text/css">
+    div.cursor {
+      height: 12px;
+      width: 12px;
+      border-radius: 0px 4px 4px 4px;
+      position: absolute;
+      z-index: 9999;
+      box-shadow: 0 0 2px 1px #505050;
+    }
 
-        <!-- Using RequireJS -->
-        <script data-main="js/app" src="js/libs/require.js"></script>
-        
-    </head>
+    div.cursor-click {
+      height: 30px;
+      width: 30px;
+      border-radius: 15px;
+      position: absolute;
+      z-index: 9998;
+    }
 
-    <body>
-        <!-- <button onclick="TogetherJS(this)">Start Co-browser</button> -->
+    #main {
+      position: relative;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
 
-        <button id="createSession">Create session</button>
+    #lobby{
+      position: absolute;
+      top:100px;
+      left:20vw;
+    }
+
+    .choices{
+      margin: 30px;
+    }
+
+    .choices button {
+      margin: 20px;
+      padding: 15px;
+      font-size: smaller
+    }
+
+    .choices p {
+      font-size: larger;
+      margin-bottom: 10px
+    }
+
+    #room {
+      display: none;
+    }
+
+    #lobby input {
+      display: block;
+      background-color: transparent;
+      border: none;
+      border-bottom: 2px solid black;
+      outline: none;
+      margin: 20px 10px;
+      padding-bottom: 15px;
+      width: 400px;
+    }
+
+    #leaveRoom {
+     float: right;
+    }
+  </style>
+  <script data-main="js/common" src="js/libs/require.js"></script>
+
+</head>
+
+<body>
+  <div id="main">
+    <div id="lobby">
+      <div class="choices">
+        <p>You can create a new room</p>
         <input type="text" value="" id="roomName"></input>
-        <button id="joinSession">Join session</button>
+        <button id="createSession" class="btn btn-default">Create session</button>
+      </div>
+      <div class="choices">
+        <p> Or join an existing room
         <input type="text" value="" id="joinRoom"></input>
-        
-        <header> <!-- Header -->
-            <div class="main-container"> <!-- Main container -->
-                <div class="logo-and-cart-wrapper"> <!-- Logo and cart -->
-                    <a class="logo" href="/">
-                        <img src="img/logo.png" alt="Vaimo store logo">
-                    </a>
-                    <div class="cart-wrapper-outer">
-                        <div class="cart-wrapper">
-                            <a id="btn-show-cart" class="btn btn-show-cart">
-                                <i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>&nbsp;
-                                <span id="total-cart-items" class="total-cart-items"></span>
-                                <span>&nbsp;items in your cart&nbsp;&nbsp;</span>
-                                <span id="total-cart-price" class="total-cart-price"></span>
-                            </a>
-                            <div class="cart-gap"></div>
-                            <div id="cart-items" class="cart-items">
-                                <div id="cart-item"></div>
-                                <div class="cart-checkout-button-wrapper">
-                                    <button class="btn btn-default">Go to checkout</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <a id="btn-show-menu" class="btn btn-show-menu">
-                            <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
-                        </a>
-                    </div>
-                </div> <!-- End logo and cart -->
-                <div class="navigation-wrapper" id="navigation-wrapper"> <!-- Navigation bar -->
-                    <div class="navigation">
-                        <a href="/women">Women</a>
-                        <a>Men</a>
-                        <a>Junior</a>
-                        <a>Accessories</a>
-                        <div class="dropdown-level1-wrapper">
-                            <a class="dropdown-level1-button">Collections</a>
-                            <div class="dropdown-level1-content">
-                                <a>2014
-                                    <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                </a>
-                                <a>2013
-                                    <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                </a>
-                                <div class="dropdown-level2-wrapper">
-                                    <a class="dropdown-level2-button">2012
-                                        <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                    </a>
-                                    <div class="dropdown-level2-content">
-                                        <a>Summer</a>
-                                        <a>Autumn</a>
-                                        <a>Winter</a>
-                                        <a>Spring</a>
-                                    </div>
-                                </div>
-                                <a>2011
-                                    <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <a class="sale">Sale</a>
-                        <a class="account">My account</a>
-                    </div>
-                </div> <!-- End navigation bar -->
-            </div> <!-- End main container -->
-        </header> <!-- End Header -->
+        <button id="joinSession" class="btn btn-default">Join session</button>
+      </div>
+    </div>
 
-        <div class="main-container"> <!-- Contents -->
-            <div class="splash-slogan-wrapper"> <!-- Splash and slogan -->
-                <div class="splash-wrapper">
-                    <img src="img/splash.png" alt="" srcset="">
+    <div id="room">
+      <header>
+        <!-- Header -->
+        <div class="main-container">
+          <!-- Main container -->
+          <div class="logo-and-cart-wrapper">
+            <!-- Logo and cart -->
+            <a class="logo" href="#">
+              <img src="img/logo.png" alt="Vaimo store logo">
+            </a>
+            <p id="current-room"></p>
+            <div class="cart-wrapper-outer">
+              <div class="cart-wrapper">
+                <a id="btn-show-cart" class="btn btn-show-cart">
+                  <i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>&nbsp;
+                  <span id="total-cart-items" class="total-cart-items"></span>
+                  <span>&nbsp;items in your cart&nbsp;&nbsp;</span>
+                  <span id="total-cart-price" class="total-cart-price"></span>
+                </a>
+                <div class="cart-gap"></div>
+                <div id="cart-items" class="cart-items">
+                  <div id="cart-item"></div>
+                  <div class="cart-checkout-button-wrapper">
+                    <button class="btn btn-default">Go to checkout</button>
+                  </div>
                 </div>
-                <div class="slogan-wrapper">
-                    <div class="slogan-heading">
-                        <p>This is Vaimo Store</p>
-                    </div>
+              </div>
 
-                    <div class="slogan-sub-heading">
-                        Your one-stop
-                        <br>Fashion destination
-                    </div>
-                    <div class="slogan-description">
-                        Shop from over 850 of the best brands, including VAIMO's own label. Plus, get your daily fix of the freshest style, celebrity
-                        and music news.
-                    </div>
-                </div>
-            </div> <!-- End splash and slogan -->
-            <div class="favourite-wrapper"> <!-- Favorite wrapper -->
-                <div class="favourite-title-wrapper">
-                    <div class="favourite-divider"></div>
-                    <h1 class="favourite-title">Our favourites</h1>
-                </div>
-            </div> <!-- End favorite wrapper -->
-            <div class="products-wrapper"> <!-- Products wrapper -->
-                <div class="products">
-                </div>
-            </div> <!-- End products wrapper -->
-        </div> <!-- End contents -->
-
-        <footer> <!-- Footer -->
-            <div class="main-container">
-                <div class="footer-inner-wrapper"> <!-- Footer inner wrapper -->
-                    <div class="footer-component top-categories"> <!-- Top categories -->
-                        <div class="footer-heading">top categories</div>
-                        <div class="footer-content">
-                            <ul>
-                                <li>
-                                    <a>women</a>
-                                </li>
-                                <li>
-                                    <a>men</a>
-                                </li>
-                                <li>
-                                    <a>junior</a>
-                                </li>
-                                <li>
-                                    <a>accessories</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div> <!-- End top categories -->
-                    <div class="footer-component customer-service"> <!-- Customer service -->
-                        <div class="footer-heading">customer service</div>
-                        <div class="footer-content">
-                            <ul>                                
-                                <li>
-                                    <a>returns</a>
-                                </li>
-                                <li>
-                                    <a>shipping</a>
-                                </li>
-                                <li>
-                                    <a>about us</a>
-                                </li>
-                                <li>
-                                    <a>contact us</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div> <!-- End customer service -->
-                    <div class="footer-component newsletter-subscribe"> <!-- Newsletter subscribe -->
-                        <div class="footer-heading">newsletter subscribe</div>
-                        <div class="footer-content">
-                            <div class="input-wrapper">
-                                <i class="fa fa-envelope-o"></i>
-                                <input id="email-input" type="text" placeholder="Enter your email address">
-                            </div>
-                            <button id="subscribe-newsletter" type="button" class="btn btn-default btn-subscribe">subscribe</button>
-                        </div>
-                        <div id="subscribe-notification" class="subscribe-notification"></div>
-                    </div> <!-- End newsletter subscribe -->
-                </div>  <!-- End footer inner wrapper -->
+              <a id="btn-show-menu" class="btn btn-show-menu">
+                <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+              </a>
             </div>
-        </footer> <!-- End footer -->
-    </body>
+          </div>
+          <!-- End logo and cart -->
+          <div class="navigation-wrapper" id="navigation-wrapper">
+            <!-- Navigation bar -->
+            <div class="navigation">
+              <a href="/women">Women</a>
+              <a>Men</a>
+              <a>Junior</a>
+              <a>Accessories</a>
+              <div class="dropdown-level1-wrapper">
+                <a class="dropdown-level1-button">Collections</a>
+                <div class="dropdown-level1-content">
+                  <a>2014
+                    <i class="fa fa-caret-right" aria-hidden="true"></i>
+                  </a>
+                  <a>2013
+                    <i class="fa fa-caret-right" aria-hidden="true"></i>
+                  </a>
+                  <div class="dropdown-level2-wrapper">
+                    <a class="dropdown-level2-button">2012
+                      <i class="fa fa-caret-right" aria-hidden="true"></i>
+                    </a>
+                    <div class="dropdown-level2-content">
+                      <a>Summer</a>
+                      <a>Autumn</a>
+                      <a>Winter</a>
+                      <a>Spring</a>
+                    </div>
+                  </div>
+                  <a>2011
+                    <i class="fa fa-caret-right" aria-hidden="true"></i>
+                  </a>
+                </div>
+              </div>
+              <a class="sale">Sale</a>
+              <a class="account">My account</a>
+              <button id="leaveRoom" class="btn btn-default"></button>
+            </div>
+          </div>
+          <!-- End navigation bar -->
+        </div>
+        <!-- End main container -->
+      </header>
+      <!-- End Header -->
+
+      <div class="main-container">
+        <!-- Contents -->
+        <div class="splash-slogan-wrapper">
+          <!-- Splash and slogan -->
+          <div class="splash-wrapper">
+            <img src="img/splash.png" alt="" srcset="">
+          </div>
+          <div class="slogan-wrapper">
+            <div class="slogan-heading">
+              <p>This is Vaimo Store</p>
+            </div>
+
+            <div class="slogan-sub-heading">
+              Your one-stop
+              <br>Fashion destination
+            </div>
+            <div class="slogan-description">
+              Shop from over 850 of the best brands, including VAIMO's own label. Plus, get your daily fix of the freshest style, celebrity
+              and music news.
+            </div>
+          </div>
+        </div>
+        <!-- End splash and slogan -->
+        <div class="favourite-wrapper">
+          <!-- Favorite wrapper -->
+          <div class="favourite-title-wrapper">
+            <div class="favourite-divider"></div>
+            <h1 class="favourite-title">Our favourites</h1>
+          </div>
+        </div>
+        <!-- End favorite wrapper -->
+        <div class="products-wrapper">
+          <!-- Products wrapper -->
+          <div class="products">
+          </div>
+        </div>
+        <!-- End products wrapper -->
+      </div>
+      <!-- End contents -->
+
+      <footer>
+        <!-- Footer -->
+        <div class="main-container">
+          <div class="footer-inner-wrapper">
+            <!-- Footer inner wrapper -->
+            <div class="footer-component top-categories">
+              <!-- Top categories -->
+              <div class="footer-heading">top categories</div>
+              <div class="footer-content">
+                <ul>
+                  <li>
+                    <a>women</a>
+                  </li>
+                  <li>
+                    <a>men</a>
+                  </li>
+                  <li>
+                    <a>junior</a>
+                  </li>
+                  <li>
+                    <a>accessories</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- End top categories -->
+            <div class="footer-component customer-service">
+              <!-- Customer service -->
+              <div class="footer-heading">customer service</div>
+              <div class="footer-content">
+                <ul>
+                  <li>
+                    <a>returns</a>
+                  </li>
+                  <li>
+                    <a>shipping</a>
+                  </li>
+                  <li>
+                    <a>about us</a>
+                  </li>
+                  <li>
+                    <a>contact us</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- End customer service -->
+            <div class="footer-component newsletter-subscribe">
+              <!-- Newsletter subscribe -->
+              <div class="footer-heading">newsletter subscribe</div>
+              <div class="footer-content">
+                <div class="input-wrapper">
+                  <i class="fa fa-envelope-o"></i>
+                  <input id="email-input" type="text" placeholder="Enter your email address">
+                </div>
+                <button id="subscribe-newsletter" type="button" class="btn btn-default btn-subscribe">subscribe</button>
+              </div>
+              <div id="subscribe-notification" class="subscribe-notification"></div>
+            </div>
+            <!-- End newsletter subscribe -->
+          </div>
+          <!-- End footer inner wrapper -->
+        </div>
+      </footer>
+      <!-- End footer -->
+    </div>
+  </div>
+</body>
 </html>

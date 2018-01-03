@@ -8,7 +8,7 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
 
         var currentRoom;
 
-
+        
         socket.connection.on('message', function (msg) {
             console.log(msg);
         })
@@ -93,7 +93,7 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
 
         // Remote "mouse move" event.
         socket.connection.on('onMouseMove', function (data) {
-
+           
             if ($.inArray(data.id, createdUsers) === -1) {
                 createCursor(data.id);
             }

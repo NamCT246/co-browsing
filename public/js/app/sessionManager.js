@@ -5,20 +5,62 @@ define([
 ], function (require, $, socket) {
   'use strict';
 
-  var session = {};
+  var session = {},
+    $lobby = $('#lobby'),
+    $room = $('#room');
+
+  function openRoom(room) {
+    $lobby.fadeOut();
+    $room.show();
+    $lobby.off('click');
+
+    $('#leaveRoom').html('Leave room ' + room);
+    
+  }
+  
+  function closeRoom() {
+    $room.fadeOut();
+    $room.off('click');
+    $lobby.show();
+  }
 
   session.create = $("#createSession").click(function () {
-    // openModal()
+
     var room = $("#roomName").val();
-    socket.connection.emit('createRoom', room);
+    socket.connection.emit('createRoom', room, function (data) {
+      console.log(data);
+      if (data.type === 'Abort') {
+        return alert("Error: " + data.reason);
+      }
+
+      if (data.type === 'Ok') {
+        openRoom(data.room);
+      }
+    });
   });
 
   session.join = $("#joinSession").click(function () {
-    // openModal()
+
     var room = $("#joinRoom").val();
-    console.log(room);
-    socket.connection.emit('joinRoom', room);
+    socket.connection.emit('joinRoom', room, function (data) {
+
+      if (data.type === 'Abort') {
+        return alert("Error: " + data.reason);
+      }
+
+      if (data.type === 'Ok') {
+        openRoom(data.room);
+      }
+    });
   });
+
+  session.leave = $("#leaveRoom").click(function(){
+    socket.connection.emit('leaveRoom', room, function(data){
+      if(data.type === 'Ok'){
+        closeRoom();
+      }
+    })
+  })
 
   return session;
 });
