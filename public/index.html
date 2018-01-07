@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="css/content.css">
   <link rel="stylesheet" href="css/footer.css">
   <style type="text/css">
+  
     div.cursor {
       height: 12px;
       width: 12px;
@@ -48,13 +49,13 @@
       width: 100%;
     }
 
-    #lobby{
+    #lobby {
       position: absolute;
-      top:100px;
-      left:20vw;
+      top: 100px;
+      left: 20vw;
     }
 
-    .choices{
+    .choices {
       margin: 30px;
     }
 
@@ -85,8 +86,76 @@
     }
 
     #leaveRoom {
-     float: right;
+      float: right;
     }
+
+    #textArea {
+      margin-top: 50px;
+      width: 100%;
+      margin-left: 20px;
+    }
+
+    textarea {
+      width: 300px;
+      height: 200px
+    }
+
+    .hangman{
+      margin: 50px;
+    }
+
+    .guess, .wrong {
+      display: inline-block;
+      margin:20px;
+    }
+
+    .guessForm, .message{
+      float: right;
+      padding: 20px;
+    }
+    
+    .word{
+     background: aquamarine;
+     padding: 0
+    }
+
+    .wrongLetters { 
+      background: beige;
+      padding: 0
+    }
+
+    .wrongLetters p {
+      background: #e41c2b;
+      padding: 5px;
+    }
+
+    .wrongLetters li{
+      display: inline-block;
+      font-size: 20px;
+      padding: 5px;
+      list-style: none;
+    }
+
+    .letter {
+      display: inline-block;
+      padding: 8px;
+    }
+
+    .word {
+      display: block;
+    }
+
+    .highlight {
+      color: #ea0c1c;
+      font-style: italic;
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+
+    .restart, #leaveRoom{
+      background: red;
+    }
+
   </style>
   <script data-main="js/common" src="js/libs/require.js"></script>
 
@@ -102,8 +171,8 @@
       </div>
       <div class="choices">
         <p> Or join an existing room
-        <input type="text" value="" id="joinRoom"></input>
-        <button id="joinSession" class="btn btn-default">Join session</button>
+          <input type="text" value="" id="joinRoom"></input>
+          <button id="joinSession" class="btn btn-default">Join session</button>
       </div>
     </div>
 
@@ -178,7 +247,35 @@
               <button id="leaveRoom" class="btn btn-default"></button>
             </div>
           </div>
+
+
+          <div class="hangman">
+            <div class="guess"></div>
+            <form class="guessForm">
+              <input type="text" class="guessLetter" maxlength="1" placeholder="Enter a letter" />
+              <button type="submit" class="btn btn-default guessButton">Guess</button>
+              <button class="btn btn-danger restart">Play Again?</button>
+            </form>
+
+            <div class="wrong">
+              <div class="wrongLetters"></div>
+            </div>
+            <div class="message">
+              <h1 class="title"></h1>
+              <p class="text"></p>
+
+            </div>
+          </div>
+
           <!-- End navigation bar -->
+          <div id="textArea">
+            <p>Describe your feelings right now</p>
+            <p>
+              <b>Careful someone will see that!!!</b>
+            </p>
+            <textarea></textarea>
+          </div>
+
         </div>
         <!-- End main container -->
       </header>
@@ -186,8 +283,7 @@
 
       <div class="main-container">
         <!-- Contents -->
-        <div class="splash-slogan-wrapper">
-          <!-- Splash and slogan -->
+        <!-- <div class="splash-slogan-wrapper">
           <div class="splash-wrapper">
             <img src="img/splash.png" alt="" srcset="">
           </div>
@@ -205,15 +301,14 @@
               and music news.
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- End splash and slogan -->
-        <div class="favourite-wrapper">
-          <!-- Favorite wrapper -->
+        <!-- <div class="favourite-wrapper"> 
           <div class="favourite-title-wrapper">
             <div class="favourite-divider"></div>
             <h1 class="favourite-title">Our favourites</h1>
-          </div>
-        </div>
+          </div> 
+        </div> -->
         <!-- End favorite wrapper -->
         <div class="products-wrapper">
           <!-- Products wrapper -->
@@ -292,4 +387,5 @@
     </div>
   </div>
 </body>
+
 </html>

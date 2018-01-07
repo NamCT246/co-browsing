@@ -1,4 +1,4 @@
-define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker", "sessionManager"], function (require, $, scrollTo, socket, elementFinder, eventMaker, session) {
+define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker", "sessionManager", "main-ui"], function (require, $, scrollTo, socket, elementFinder, eventMaker, session, ui) {
 
     $(document).ready(function () {
 
@@ -6,22 +6,33 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
          * Connect to the signalling server *
          ************************************/
 
-        var currentRoom;
+        var currentRoom,
+            socketId,
+            color;
 
-        
+        socket.connection.on('connect', function () {
+            socketId = socket.connection.id;
+            console.log(socketId);
+        })
+
         socket.connection.on('message', function (msg) {
             console.log(msg);
         })
-        
+
         socket.connection.on('leaveRoom', function (data) {
             console.log("User " + data.username + " has just left the room");
             removeCursor(data.id);
         })
 
-        socket.connection.on('success', function (room) {
+        socket.connection.on('successJoin', function (room) {
             console.log("Successfully joined " + room);
             currentRoom = room;
-        })        
+        })
+
+        socket.connection.on('userJoin', function (data) {
+            ui.sendProgress(data.user);
+        })
+
 
         /************************
          * Button handlers *
@@ -70,6 +81,8 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
                 socket.connection.emit('mouseMove', lastMessage);
                 return;
             }
+
+
             target = $(target);
             var offset = target.offset();
 
@@ -93,7 +106,7 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
 
         // Remote "mouse move" event.
         socket.connection.on('onMouseMove', function (data) {
-           
+
             if ($.inArray(data.id, createdUsers) === -1) {
                 createCursor(data.id);
             }
@@ -120,7 +133,7 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
 
         function showMouseMove(pos, userId) {
             var top, left;
-            
+
             if (pos.element) {
                 var target = $(elementFinder.findElement(pos.element));
                 var offset = target.offset();
@@ -247,19 +260,18 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
 
         socket.connection.on("onMouseScroll", function (data) {
             console.log(data.mouseScrollData.position.absoluteTop);
-            $(window).scrollTop( data.mouseScrollData.position.absoluteTop );
+            $(window).scrollTop(data.mouseScrollData.position.absoluteTop);
         });
 
         /************************
          * Input handlers *
          ************************/
-        
-        $(document).on('input', function(event){     
+
+        $(document).on('input', function (event) {
             var el = event.target,
-                elValue = $(el).val();       
-            
+                elValue = $(el).val();
+
             var location = elementFinder.elementLocation(el);
-            console.log(currentRoom);
             socket.connection.emit('inputChanged', {
                 'location': location,
                 'value': elValue,
@@ -267,10 +279,9 @@ define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker"
             })
         })
 
-        socket.connection.on('onInputChanged', function(data){
-            console.log(data, data.inputData.location);
+        socket.connection.on('onInputChanged', function (data) {
             var el = elementFinder.findElement(data.inputData.location);
             $(el).val(data.inputData.value);
-        })
+        })  
     });
 });

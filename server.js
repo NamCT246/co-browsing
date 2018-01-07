@@ -37,6 +37,15 @@ io.on('connection', function (socket) {
 
   console.log(socket.id + " has joined");
 
+  socket.on("message", function(data){
+    console.log(data);
+  })
+
+  socket.on("progress", function(data){
+    console.log(data);
+    socket.to(data.to).emit("progress", data);
+  })
+
   function createRoom(newRoom) {
     socket.join(newRoom);
     updateRoom('create', newRoom);
@@ -92,10 +101,14 @@ io.on('connection', function (socket) {
       var room_to_update = getRoomByName(room);
       room_to_update.num_user++;
       room_to_update.userId.push(socket.id);
+
+      socket.in(room).emit('userJoin', {
+        user: socket.id
+      })
     }
 
     currRoom = room;
-    socket.emit('success', room);
+    socket.emit('successJoin', room);
   }
 
   function getRoomByName(roomName) {
@@ -221,7 +234,7 @@ io.on('connection', function (socket) {
 
 });
 
-const port = process.env.PORT || 9999;
+const port = process.env.PORT || 2112;
 server.listen(port, function () {
   console.log('Example app listening on port ' + port);
 });

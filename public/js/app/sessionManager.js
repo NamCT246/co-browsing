@@ -1,8 +1,10 @@
 define([
   'require',
   'jquery',
-  'socket'
-], function (require, $, socket) {
+  'socket',
+  'main-ui',
+  'hangman'
+], function (require, $, socket, ui, hangman) {
   'use strict';
 
   var session = {},
@@ -13,6 +15,8 @@ define([
     $lobby.fadeOut();
     $room.show();
     $lobby.off('click');
+
+    // color = ui.getUserColor(socketId);
 
     $('#leaveRoom').html('Leave room ' + room);
     
@@ -37,6 +41,11 @@ define([
         openRoom(data.room);
       }
     });
+
+
+    var words = ["musta", "sininen", "ruskea", "värit", "harmaa", "vihreä", "oranssi", "punainen", "valkoinen", "keltainen", "Persikoita", "Päärynoitä", "Pippureita", "Ananaksia", "pitsa", "perunoita", "Kurpitsoja", "salaatti", "suola", "voileipä", "limukka", "limppari", "mansikoita", "sokeri", "tee", "tomaatteja", "Vihannekset", "vesi", "Vesimeloneja"];
+
+    hangman.init(words);
   });
 
   session.join = $("#joinSession").click(function () {
@@ -50,6 +59,11 @@ define([
 
       if (data.type === 'Ok') {
         openRoom(data.room);
+        
+        socket.connection.on('progress', function (data) {
+          console.log(data);
+          ui.updateProgress(data);
+        })
       }
     });
   });
