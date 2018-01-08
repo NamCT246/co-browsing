@@ -17,7 +17,6 @@ define([
     $lobby.off('click');
 
     // color = ui.getUserColor(socketId);
-
     $('#leaveRoom').html('Leave room ' + room);
     
   }

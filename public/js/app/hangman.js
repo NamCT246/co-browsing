@@ -7,17 +7,16 @@ define([
 
     var hangman = {
       init: function(words){
-        this.words = (words || []),
+        this.words = words,
         this.hm = $(".hangman"),
         this.msg = $(".message"),
         this.msgTitle = $(".title"),
         this.msgText = $(".text"),
         this.restart = $(".restart"),
-        this.currWord = this.wrd,
         this.correct = 0,
         this.guess = $(".guess"),
         this.wrong = $(".wrong"),
-        this.allGuesses = [];
+        this.allGuesses = []; 
         this.wrongGuesses = [],
         this.rightGuesses = [],
         this.guessForm = $(".guessForm"),
@@ -29,6 +28,7 @@ define([
 
         if(!this.wrd) this.wrd = this.randomWord();
 
+        this.currWord = this.wrd,
         this.setup();
       },
   
@@ -192,34 +192,29 @@ define([
         this.msg.hide();
         this.msgTitle.hide();
         this.msgText.hide();
+        this.restart.css('visibility', 'hidden')
       },
   
   
       showMsg: function(){
-        var _ = this;
-        _.msg.show("blind", function(){
-          _.msgTitle.show("bounce", "slow", function(){
-            _.msgText.show("slide", function(){
-              _.restart.show("fade");
-            });
-  
-          });
-  
-        });
+        this.restart.css('visibility', 'visible');
       },
       
 
       redraw: function(data){
         console.log(data);
         this.showGuess();
-        this.setLetters(data.shownLetters)
+        this.setLetters(data.shownLetters);
+        this.showWrong(data.wrongGuess)
       },
 
   
       reset: function(){
         this.hideMsg();
+        this.wrd = undefined;
         this.init(this.words);
         this.hm.find(".guessLetter").focus();
+        this.guess.prop('disabled', false);        
       },
   
   
@@ -251,7 +246,7 @@ define([
         this.msgTitle.html("You win");
         this.showMsg();
         this.playSound("winSound");
-  
+        this.guess.prop('disabled', true);        
       },
   
   
@@ -259,6 +254,7 @@ define([
         this.msgTitle.html("You Lost.. The word was <span class='highlight'>"+ this.wrd.word +"</span>");
         this.showMsg();
         this.playSound("loseSound");
+        this.guess.prop('disabled', true);
       }
     
     };

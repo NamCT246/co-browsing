@@ -25,32 +25,33 @@ define([
   ui.updateProgress = function (data) {
     console.log(data);
     hangman.currWord = hangman.wrd = hangman._wordData(data.word);
+    hangman.wrongGuesses = data.wrongGuesses;
     hangman.init();
-    // hangman.guess = $('.guess');
     hangman.redraw(data);
   }
 
   ui.sendProgress = function (user) {
     var currentWord = hangman.wrd,
-      rightLetters = hangman.rightGuesses;
-
-    var progress = {
+      rightLetters = hangman.rightGuesses,
+      wrongGuesses = hangman.wrongGuesses,
+      progress = {
         word: currentWord,
         shownLetters: [],
+        wrongGuess: wrongGuesses,
         to: user
-      }
+      };
 
-    $.each(currentWord.letters, function(key, val){
-      $.each(rightLetters, function(k, v){
-         if(v === val.letter.toLowerCase()){
-           progress.shownLetters.push({
-             letter: val.letter,
-             pos: key
-           })
-         }
+    $.each(currentWord.letters, function (key, val) {
+      $.each(rightLetters, function (k, v) {
+        if (v === val.letter.toLowerCase()) {
+          progress.shownLetters.push({
+            letter: val.letter,
+            pos: key
+          })
+        }
       })
     });
-    
+
 
     socket.connection.emit('progress', progress)
   }
