@@ -1,0 +1,38 @@
+{
+  "extends": ["prettier", "airbnb-base"],
+  "parserOptions": {
+    "ecmaVersion": 5,
+    "sourceType": "script",
+    "ecmaFeatures": {}
+  },
+  "env": {
+    "amd": true
+  },
+  "plugins": ["requirejs", "prettier"],
+  "rules": {
+    "object-curly-spacing": ["warn", "never"],
+    "curly": ["error", "all"],
+    "max-len": [
+      "error",
+      {"code": 80, "ignoreUrls": true, "ignoreComments": true}
+    ],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "ignore"
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "bracketSpacing": false
+      }
+    ]
+  }
+}

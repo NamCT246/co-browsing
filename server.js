@@ -1,50 +1,50 @@
-var express = require('express');
-var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var path = require('path');
-var cors = require('cors');
-var _ = require('lodash');
+let express = require('express');
+
+let app = express();
+let server = require('http').Server(app);
+let io = require('socket.io')(server);
+let path = require('path');
+let cors = require('cors');
+let _ = require('lodash');
 
 app.use(cors());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-/* 
+/*
 @rooms: array contains all the room, and users inside that room
 
 rooms = [
   {
     name: "asdsad"
-    num_user: 10, 
-    userId: ["123213213", "1232132132131", "asdsadsadsa"] 
+    num_user: 10,
+    userId: ["123213213", "1232132132131", "asdsadsadsa"]
   }
 ]
 */
 
-var rooms = [],
+let rooms = [],
   num_client = 0;
 
-io.on('connection', function (socket) {
-
+io.on('connection', socket => {
   var currRoom;
 
   ++num_client;
 
-  console.log(socket.id + " has joined");
+  console.log(socket.id + ' has joined');
 
-  socket.on("message", function(data){
+  socket.on('message', function(data) {
     console.log(data);
-  })
+  });
 
-  socket.on("progress", function(data){
+  socket.on('progress', function(data) {
     console.log(data);
-    socket.to(data.to).emit("progress", data);
-  })
+    socket.to(data.to).emit('progress', data);
+  });
 
   function createRoom(newRoom) {
     socket.join(newRoom);
@@ -57,10 +57,9 @@ io.on('connection', function (socket) {
   }
 
   function leaveRoom(oldRoom) {
-    var
-      leaver = {
+    var leaver = {
         id: socket.id,
-        username: socket.id
+        username: socket.id,
       },
       room = getRoomByName(oldRoom);
 
@@ -86,13 +85,12 @@ io.on('connection', function (socket) {
   }
 
   function updateRoom(method, room) {
-
     if (method === 'create') {
       var createdRoom = {
         name: room,
         num_user: 1,
-        userId: []
-      }
+        userId: [],
+      };
       createdRoom.userId[0] = socket.id;
       rooms.push(createdRoom);
     }
@@ -103,8 +101,8 @@ io.on('connection', function (socket) {
       room_to_update.userId.push(socket.id);
 
       socket.in(room).emit('userJoin', {
-        user: socket.id
-      })
+        user: socket.id,
+      });
     }
 
     currRoom = room;
@@ -112,16 +110,16 @@ io.on('connection', function (socket) {
   }
 
   function getRoomByName(roomName) {
-    var room = _.find(rooms, { name: roomName })
+    var room = _.find(rooms, {name: roomName});
     if (!room) return;
 
     return room;
   }
 
   function getRoomBySocketId(id) {
-    return _.filter(rooms, function (room) {
+    return _.filter(rooms, function(room) {
       return room.userId.indexOf(id) === 0;
-    })
+    });
   }
 
   function getRoomNumUser(room) {
@@ -130,12 +128,11 @@ io.on('connection', function (socket) {
 
     return {
       length: room.userId.length,
-      index: rooms.indexOf(room)
-    }
+      index: rooms.indexOf(room),
+    };
   }
 
-  socket.on('createRoom', function (room, ack) {
-
+  socket.on('createRoom', function(room, ack) {
     if (currRoom && room !== currRoom) {
       leaveRoom(currRoom);
     }
@@ -143,37 +140,35 @@ io.on('connection', function (socket) {
     if (getRoomByName(room)) {
       ack({
         type: 'Abort',
-        reason:'Room already exist. Try creating a new one'
-      })
+        reason: 'Room already exist. Try creating a new one',
+      });
       return;
     }
 
     createRoom(room);
     ack({
       type: 'Ok',
-      room: room
+      room: room,
     });
-  })
+  });
 
-  socket.on('joinRoom', function (room, ack) {
-
+  socket.on('joinRoom', function(room, ack) {
     if (!getRoomByName(room)) {
       ack({
         type: 'Abort',
-        reason:'Room not exist. Better create a new one'
+        reason: 'Room not exist. Better create a new one',
       });
       return;
     }
 
     if (currRoom) {
       if (room === currRoom) {
-       ack({
-         type: 'Abort',
-         reason: 'You are already in this room'
+        ack({
+          type: 'Abort',
+          reason: 'You are already in this room',
         });
         return;
-      }
-      else {
+      } else {
         leaveRoom(currRoom);
       }
     }
@@ -181,19 +176,19 @@ io.on('connection', function (socket) {
     joinRoom(room);
     ack({
       type: 'Ok',
-      room: room
+      room: room,
     });
   });
 
-  socket.on('leaveRoom', function(room, ack){
+  socket.on('leaveRoom', function(room, ack) {
     leaveRoom(room);
     ack({
       type: 'Ok',
-      room: room
-    })
-  })
+      room: room,
+    });
+  });
 
-  socket.on('disconnect', function () {
+  socket.on('disconnect', function() {
     leaveRoom(currRoom);
     --num_client;
     currRoom = undefined;
@@ -204,37 +199,36 @@ io.on('connection', function (socket) {
     }
   });
 
-  socket.on('mouseMove', function (data) {
+  socket.on('mouseMove', function(data) {
     socket.in(data.room).emit('onMouseMove', {
       id: socket.id,
-      mouseMoveData: data
+      mouseMoveData: data,
     });
   });
 
-  socket.on('mouseClick', function (data) {
+  socket.on('mouseClick', function(data) {
     socket.in(data.room).emit('onMouseClick', {
       id: socket.id,
-      mouseClickData: data
+      mouseClickData: data,
     });
   });
 
-  socket.on('mouseScroll', function (data) {
+  socket.on('mouseScroll', function(data) {
     socket.in(data.room).emit('onMouseScroll', {
       id: socket.id,
-      mouseScrollData: data
+      mouseScrollData: data,
     });
   });
 
-  socket.on('inputChanged', function (data) {
+  socket.on('inputChanged', function(data) {
     socket.in(data.room).emit('onInputChanged', {
       id: socket.id,
-      inputData: data
-    })
+      inputData: data,
+    });
   });
-
 });
 
-const port = process.env.PORT || 2112;
-server.listen(port, function () {
+let port = process.env.PORT || 2112;
+server.listen(port, () => {
   console.log('Example app listening on port ' + port);
 });

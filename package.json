@@ -9,7 +9,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint public/js/app"
   },
   "author": "",
   "license": "ISC",
@@ -18,5 +19,14 @@
     "express": "4.16.2",
     "lodash": "^4.17.4",
     "socket.io": "1.7.4"
+  },
+  "devDependencies": {
+    "eslint": "^4.15.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^2.4.0",
+    "eslint-plugin-requirejs": "^3.1.1",
+    "prettier": "^1.9.2"
   }
 }

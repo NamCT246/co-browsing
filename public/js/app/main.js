@@ -1,287 +1,296 @@
-define(["require", "jquery", "scrollTo", "socket", "elementFinder", "eventMaker", "sessionManager", "main-ui"], function (require, $, scrollTo, socket, elementFinder, eventMaker, session, ui) {
+define(
+  [
+    'require',
+    'jquery',
+    'scrollTo',
+    'socket',
+    'elementFinder',
+    'eventMaker',
+    'sessionManager',
+    'main-ui',
+  ],
+  (require, $, scrollTo, socket, elementFinder, eventMaker, session, ui) => {
+    $(document).ready(function() {
+      /************************************
+       * Connect to the signalling server *
+       ************************************/
 
-    $(document).ready(function () {
+      var currentRoom, socketId, color;
 
-        /************************************
-         * Connect to the signalling server *
-         ************************************/
+      socket.connection.on('connect', function() {
+        socketId = socket.connection.id;
+        console.log(socketId);
+      });
 
-        var currentRoom,
-            socketId,
-            color;
+      socket.connection.on('message', function(msg) {
+        console.log(msg);
+      });
 
-        socket.connection.on('connect', function () {
-            socketId = socket.connection.id;
-            console.log(socketId);
-        })
+      socket.connection.on('leaveRoom', function(data) {
+        console.log('User ' + data.username + ' has just left the room');
+        removeCursor(data.id);
+      });
 
-        socket.connection.on('message', function (msg) {
-            console.log(msg);
-        })
+      socket.connection.on('successJoin', function(room) {
+        console.log('Successfully joined ' + room);
+        currentRoom = room;
+      });
 
-        socket.connection.on('leaveRoom', function (data) {
-            console.log("User " + data.username + " has just left the room");
-            removeCursor(data.id);
-        })
+      socket.connection.on('userJoin', function(data) {
+        ui.sendProgress(data.user);
+      });
 
-        socket.connection.on('successJoin', function (room) {
-            console.log("Successfully joined " + room);
-            currentRoom = room;
-        })
+      /************************
+       * Button handlers *
+       ************************/
 
-        socket.connection.on('userJoin', function (data) {
-            ui.sendProgress(data.user);
-        })
+      // todo: remove old cursor after leaving and entering new room.
+      function removeCursor(id) {
+        var cursorId = '#cursor' + id;
+        $(cursorId).remove();
+      }
 
+      /***********************
+       * Mouse move handlers *
+       ***********************/
 
-        /************************
-         * Button handlers *
-         ************************/
+      // Local "mouse move" event.
+      $(document).mousemove(mousemove);
 
-        // todo: remove old cursor after leaving and entering new room.
-        function removeCursor(id) {
-            var cursorId = "#cursor" + id;
-            $(cursorId).remove();
+      var lastTime = 0,
+        lastPosX = -1,
+        lastPosY = -1,
+        lastMessage = null,
+        createdUsers = [];
+
+      function mousemove(event) {
+        var now = Date.now();
+        lastTime = now;
+        var pageX = event.pageX,
+          pageY = event.pageY;
+
+        if (Math.abs(lastPosX - pageX) < 3 && Math.abs(lastPosY - pageY) < 3) {
+          // Not a substantial enough change
+          return;
+        }
+        lastPosX = pageX;
+        lastPosY = pageY;
+        var target = event.target;
+
+        if (
+          !target ||
+          target == document.documentElement ||
+          target == document.body
+        ) {
+          lastMessage = {
+            type: 'mouse-move',
+            top: pageY,
+            left: pageX,
+            room: currentRoom,
+          };
+          socket.connection.emit('mouseMove', lastMessage);
+          return;
         }
 
-        /***********************
-         * Mouse move handlers *
-         ***********************/
+        target = $(target);
+        var offset = target.offset();
 
-        // Local "mouse move" event.
-        $(document).mousemove(mousemove);
-
-        var lastTime = 0,
-            lastPosX = -1,
-            lastPosY = -1,
-            lastMessage = null,
-            createdUsers = [];
-
-        function mousemove(event) {
-            var now = Date.now();
-            lastTime = now;
-            var pageX = event.pageX,
-                pageY = event.pageY;
-
-            if (Math.abs(lastPosX - pageX) < 3 && Math.abs(lastPosY - pageY) < 3) {
-                // Not a substantial enough change
-                return;
-            }
-            lastPosX = pageX;
-            lastPosY = pageY;
-            var target = event.target;
-
-            if ((!target) || target == document.documentElement || target == document.body) {
-                lastMessage = {
-                    type: "mouse-move",
-                    top: pageY,
-                    left: pageX,
-                    room: currentRoom
-                };
-                socket.connection.emit('mouseMove', lastMessage);
-                return;
-            }
-
-
-            target = $(target);
-            var offset = target.offset();
-
-            if (!offset) {
-                console.warn("Could not get offset of element:", target[0]);
-                return;
-            }
-
-            var offsetX = pageX - offset.left;
-            var offsetY = pageY - offset.top;
-
-            lastMessage = {
-                type: "mouse-move",
-                element: elementFinder.elementLocation(target),
-                offsetX: Math.floor(offsetX),
-                offsetY: Math.floor(offsetY),
-                room: currentRoom
-            };
-            socket.connection.emit('mouseMove', lastMessage);
+        if (!offset) {
+          console.warn('Could not get offset of element:', target[0]);
+          return;
         }
 
-        // Remote "mouse move" event.
-        socket.connection.on('onMouseMove', function (data) {
+        var offsetX = pageX - offset.left;
+        var offsetY = pageY - offset.top;
 
-            if ($.inArray(data.id, createdUsers) === -1) {
-                createCursor(data.id);
-            }
+        lastMessage = {
+          type: 'mouse-move',
+          element: elementFinder.elementLocation(target),
+          offsetX: Math.floor(offsetX),
+          offsetY: Math.floor(offsetY),
+          room: currentRoom,
+        };
+        socket.connection.emit('mouseMove', lastMessage);
+      }
 
-            showMouseMove(data.mouseMoveData, data.id);
+      // Remote "mouse move" event.
+      socket.connection.on('onMouseMove', function(data) {
+        if ($.inArray(data.id, createdUsers) === -1) {
+          createCursor(data.id);
+        }
+
+        showMouseMove(data.mouseMoveData, data.id);
+      });
+
+      function createCursor(id) {
+        createdUsers.push(id);
+
+        var cursorId = 'cursor' + id;
+        var cursor = $(document.createElement('div'))
+          .attr('id', cursorId)
+          .addClass('cursor')
+          .css({
+            'background-color': '#000',
+            left: '50%',
+            top: '50%',
+          })
+          .html('&nbsp;');
+
+        $(document.body).append(cursor);
+      }
+
+      function showMouseMove(pos, userId) {
+        var top, left;
+
+        if (pos.element) {
+          var target = $(elementFinder.findElement(pos.element));
+          var offset = target.offset();
+          top = offset.top + pos.offsetY;
+          left = offset.left + pos.offsetX;
+        } else {
+          // No anchor, just an absolute position
+          top = pos.top;
+          left = pos.left;
+        }
+
+        setCursorPosition(userId, top, left);
+      }
+
+      function setCursorPosition(userId, top, left) {
+        cursorId = '#cursor' + userId;
+        $(cursorId).css({
+          left: left,
+          top: top,
         });
+      }
 
-        function createCursor(id) {
-            createdUsers.push(id);
+      /************************
+       * Mouse click handlers *
+       ************************/
 
-            var cursorId = 'cursor' + id;
-            var cursor = $(document.createElement('div'))
-                .attr('id', cursorId)
-                .addClass('cursor')
-                .css({
-                    'background-color': '#000',
-                    'left': '50%',
-                    'top': '50%'
-                })
-                .html('&nbsp;');
-
-            $(document.body).append(cursor);
+      $(document).on('click', function(event) {
+        // Prevent click event from repeating between clients.
+        if (event.internalClick) {
+          return;
         }
-
-        function showMouseMove(pos, userId) {
-            var top, left;
-
-            if (pos.element) {
-                var target = $(elementFinder.findElement(pos.element));
-                var offset = target.offset();
-                top = offset.top + pos.offsetY;
-                left = offset.left + pos.offsetX;
-            } else {
-                // No anchor, just an absolute position
-                top = pos.top;
-                left = pos.left;
-            }
-
-            setCursorPosition(userId, top, left);
+        var element = event.target;
+        if (element == document.documentElement) {
+          // For some reason clicking on <body> gives the <html> element here
+          element = document.body;
         }
-
-        function setCursorPosition(userId, top, left) {
-            cursorId = '#cursor' + userId;
-            $(cursorId).css({
-                'left': left,
-                'top': top
-            });
+        if (element.nodeName.toLowerCase() === 'video') {
+          return;
         }
+        var location = elementFinder.elementLocation(element);
+        var offset = $(element).offset();
+        var offsetX = event.pageX - offset.left;
+        var offsetY = event.pageY - offset.top;
 
-        /************************
-         * Mouse click handlers *
-         ************************/
-
-        $(document).on('click', function (event) {
-            // Prevent click event from repeating between clients.
-            if (event.internalClick) {
-                return;
-            }
-            var element = event.target;
-            if (element == document.documentElement) {
-                // For some reason clicking on <body> gives the <html> element here
-                element = document.body;
-            }
-            if (element.nodeName.toLowerCase() === 'video') {
-                return;
-            }
-            var location = elementFinder.elementLocation(element);
-            var offset = $(element).offset();
-            var offsetX = event.pageX - offset.left;
-            var offsetY = event.pageY - offset.top;
-
-            socket.connection.emit('mouseClick', {
-                type: "mouse-click",
-                element: location,
-                offsetX: offsetX,
-                offsetY: offsetY,
-                room: currentRoom
-            });
+        socket.connection.emit('mouseClick', {
+          type: 'mouse-click',
+          element: location,
+          offsetX: offsetX,
+          offsetY: offsetY,
+          room: currentRoom,
         });
+      });
 
-        // Waiting for "mouse click" from other clients.
-        socket.connection.on('onMouseClick', function (data) {
-            var target = $(elementFinder.findElement(data.mouseClickData.element));
-            var offset = target.offset();
-            var top = offset.top + data.mouseClickData.offsetY;
-            var left = offset.left + data.mouseClickData.offsetX;
+      // Waiting for "mouse click" from other clients.
+      socket.connection.on('onMouseClick', function(data) {
+        var target = $(elementFinder.findElement(data.mouseClickData.element));
+        var offset = target.offset();
+        var top = offset.top + data.mouseClickData.offsetY;
+        var left = offset.left + data.mouseClickData.offsetX;
 
-            $(target).trigger({
-                type: "click",
-                internalClick: true
-            });
-            showMouseClick(top, left);
+        $(target).trigger({
+          type: 'click',
+          internalClick: true,
         });
+        showMouseClick(top, left);
+      });
 
-        function showMouseClick(top, left) {
-            clicker = $(document.createElement('div'))
-                .addClass('cursor-click')
-                .css({
-                    'background-color': 'rgba(0, 0, 0, 0.5)',
-                    'top': top - 15,
-                    'left': left - 15
-                })
-                .html('&nbsp;');
-            $(document.body).append(clicker);
-            clicker.fadeOut(1500, function () {
-                $(this).remove();
-            });
-        }
-
-        /************************
-         * Mouse scroll handlers *
-         ************************/
-
-        $(window).on('scroll', scroll);
-
-        var scrollTimeout = null;
-        var scrollTimeoutSet = 0;
-        var SCROLL_DELAY_TIMEOUT = 75;
-        var SCROLL_DELAY_LIMIT = 300;
-
-        function scroll() {
-            var now = Date.now();
-            if (scrollTimeout) {
-                if (now - scrollTimeoutSet < SCROLL_DELAY_LIMIT) {
-                    clearTimeout(scrollTimeout);
-                } else {
-                    // Just let it progress anyway
-                    return;
-                }
-            }
-            scrollTimeout = setTimeout(_scrollRefresh, SCROLL_DELAY_TIMEOUT);
-            if (!scrollTimeoutSet) {
-                scrollTimeoutSet = now;
-            }
-        }
-
-        var lastScrollMessage = null;
-
-        function _scrollRefresh() {
-            scrollTimeout = null;
-            scrollTimeoutSet = 0;
-            console.log(elementFinder.elementByPixel($(window).scrollTop()));
-            lastScrollMessage = {
-                type: "scroll-update",
-                position: elementFinder.elementByPixel($(window).scrollTop()),
-                room: currentRoom
-            };
-
-            socket.connection.emit("mouseScroll", lastScrollMessage);
-        }
-
-        socket.connection.on("onMouseScroll", function (data) {
-            console.log(data.mouseScrollData.position.absoluteTop);
-            $(window).scrollTop(data.mouseScrollData.position.absoluteTop);
+      function showMouseClick(top, left) {
+        clicker = $(document.createElement('div'))
+          .addClass('cursor-click')
+          .css({
+            'background-color': 'rgba(0, 0, 0, 0.5)',
+            top: top - 15,
+            left: left - 15,
+          })
+          .html('&nbsp;');
+        $(document.body).append(clicker);
+        clicker.fadeOut(1500, function() {
+          $(this).remove();
         });
+      }
 
-        /************************
-         * Input handlers *
-         ************************/
+      /************************
+       * Mouse scroll handlers *
+       ************************/
 
-        $(document).on('input', function (event) {
-            var el = event.target,
-                elValue = $(el).val();
+      $(window).on('scroll', scroll);
 
-            var location = elementFinder.elementLocation(el);
-            socket.connection.emit('inputChanged', {
-                'location': location,
-                'value': elValue,
-                'room': currentRoom
-            })
-        })
+      var scrollTimeout = null;
+      var scrollTimeoutSet = 0;
+      var SCROLL_DELAY_TIMEOUT = 75;
+      var SCROLL_DELAY_LIMIT = 300;
 
-        socket.connection.on('onInputChanged', function (data) {
-            var el = elementFinder.findElement(data.inputData.location);
-            $(el).val(data.inputData.value);
-        })  
+      function scroll() {
+        var now = Date.now();
+        if (scrollTimeout) {
+          if (now - scrollTimeoutSet < SCROLL_DELAY_LIMIT) {
+            clearTimeout(scrollTimeout);
+          } else {
+            // Just let it progress anyway
+            return;
+          }
+        }
+        scrollTimeout = setTimeout(_scrollRefresh, SCROLL_DELAY_TIMEOUT);
+        if (!scrollTimeoutSet) {
+          scrollTimeoutSet = now;
+        }
+      }
+
+      var lastScrollMessage = null;
+
+      function _scrollRefresh() {
+        scrollTimeout = null;
+        scrollTimeoutSet = 0;
+        console.log(elementFinder.elementByPixel($(window).scrollTop()));
+        lastScrollMessage = {
+          type: 'scroll-update',
+          position: elementFinder.elementByPixel($(window).scrollTop()),
+          room: currentRoom,
+        };
+
+        socket.connection.emit('mouseScroll', lastScrollMessage);
+      }
+
+      socket.connection.on('onMouseScroll', function(data) {
+        console.log(data.mouseScrollData.position.absoluteTop);
+        $(window).scrollTop(data.mouseScrollData.position.absoluteTop);
+      });
+
+      /************************
+       * Input handlers *
+       ************************/
+
+      $(document).on('input', function(event) {
+        var el = event.target,
+          elValue = $(el).val();
+
+        var location = elementFinder.elementLocation(el);
+        socket.connection.emit('inputChanged', {
+          location: location,
+          value: elValue,
+          room: currentRoom,
+        });
+      });
+
+      socket.connection.on('onInputChanged', function(data) {
+        var el = elementFinder.findElement(data.inputData.location);
+        $(el).val(data.inputData.value);
+      });
     });
-});
+  }
+);

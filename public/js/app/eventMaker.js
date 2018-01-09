@@ -2,14 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-define(["jquery"], function ($) {
+define(['jquery'], $ => {
   var eventMaker = {};
 
-  eventMaker.performClick = function (target) {
+  eventMaker.performClick = function(target) {
     // FIXME: should accept other parameters, like Ctrl/Alt/etc
-    var event = document.createEvent("MouseEvents");
+    var event = document.createEvent('MouseEvents');
     event.initMouseEvent(
-      "click", // type
+      'click', // type
       true, // canBubble
       true, // cancelable
       window, // view
@@ -31,7 +31,7 @@ define(["jquery"], function ($) {
     if (cancelled) {
       return;
     }
-    if (target.tagName == "A") {
+    if (target.tagName == 'A') {
       var href = target.href;
       if (href) {
         location.href = href;
@@ -40,10 +40,10 @@ define(["jquery"], function ($) {
     }
   };
 
-  eventMaker.fireChange = function (target) {
+  eventMaker.fireChange = function(target) {
     target = $(target)[0];
-    var event = document.createEvent("HTMLEvents");
-    event.initEvent("change", true, true);
+    var event = document.createEvent('HTMLEvents');
+    event.initEvent('change', true, true);
     target.dispatchEvent(event);
   };
 
