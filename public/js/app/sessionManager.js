@@ -10,6 +10,7 @@ define(
     function openRoom(room) {
       $lobby.fadeOut();
       $room.show();
+      $room.find('.welcome').html('You are now in room ' + room);
       $lobby.off('click');
 
       // color = ui.getUserColor(socketId);
@@ -24,6 +25,9 @@ define(
 
     session.create = $('#createSession').click(function() {
       var room = $('#roomName').val();
+
+      if (!room) return alert('Please add new name');
+
       socket.connection.emit('createRoom', room, function(data) {
         console.log(data);
         if (data.type === 'Abort') {
@@ -35,37 +39,8 @@ define(
         }
       });
 
-      var words = [
-        'musta',
-        'sininen',
-        'ruskea',
-        'värit',
-        'harmaa',
-        'vihreä',
-        'oranssi',
-        'punainen',
-        'valkoinen',
-        'keltainen',
-        'Persikoita',
-        'Päärynoitä',
-        'Pippureita',
-        'Ananaksia',
-        'pitsa',
-        'perunoita',
-        'Kurpitsoja',
-        'salaatti',
-        'suola',
-        'voileipä',
-        'limukka',
-        'limppari',
-        'mansikoita',
-        'sokeri',
-        'tee',
-        'tomaatteja',
-        'Vihannekset',
-        'vesi',
-        'Vesimeloneja',
-      ];
+      // prettier-ignore
+      var words = ['musta','sininen','ruskea','värit','harmaa','vihreä','oranssi','punainen','valkoinen','keltainen','Persikoita','Päärynoitä','Pippureita','Ananaksia','pitsa','perunoita','Kurpitsoja','salaatti','suola','voileipä','limukka','limppari','mansikoita','sokeri','tee','tomaatteja','Vihannekset','vesi','Vesimeloneja',];
 
       hangman.init(words);
     });

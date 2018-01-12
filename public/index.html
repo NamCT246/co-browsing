@@ -3,9 +3,9 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Vaimo Store</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Co-browsing test page</title>
 
   <!-- Import Open Sans Web-font -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700" rel="stylesheet">
@@ -16,12 +16,10 @@
   <!-- Import Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-  <!-- Import custom CSS files -->
   <link rel="stylesheet" href="css/global.css">
-  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/navigation-bar.css">
-  <link rel="stylesheet" href="css/content.css">
-  <link rel="stylesheet" href="css/footer.css">
+
   <style type="text/css">
     div.cursor {
       height: 12px;
@@ -40,126 +38,8 @@
       z-index: 9998;
     }
 
-    #main {
-      position: relative;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-    }
-
-    #lobby {
-      position: absolute;
-      top: 100px;
-      left: 20vw;
-    }
-
-    .choices {
-      margin: 30px;
-    }
-
-    .choices button {
-      margin: 20px;
-      padding: 15px;
-      font-size: smaller
-    }
-
-    .choices p {
-      font-size: larger;
-      margin-bottom: 10px
-    }
-
     #room {
       display: none;
-    }
-
-    #lobby input {
-      display: block;
-      background-color: transparent;
-      border: none;
-      border-bottom: 2px solid black;
-      outline: none;
-      margin: 20px 10px;
-      padding-bottom: 15px;
-      width: 400px;
-    }
-
-    #leaveRoom {
-      float: right;
-    }
-
-    #textArea {
-      margin-top: 50px;
-      width: 100%;
-      margin-left: 20px;
-    }
-
-    textarea {
-      width: 300px;
-      height: 200px
-    }
-
-    .hangman {
-      margin: 50px;
-    }
-
-    .guess,
-    .wrong {
-      display: inline-block;
-      margin: 20px;
-    }
-
-    .guessForm,
-    .message {
-      float: right;
-      padding: 20px;
-    }
-
-    .word {
-      background: aquamarine;
-      padding: 0
-    }
-
-    .wrongLetters {
-      background: beige;
-      padding: 0
-    }
-
-    .wrongLetters p {
-      background: #e41c2b;
-      padding: 5px;
-    }
-
-    .wrongLetters li {
-      display: inline-block;
-      font-size: 20px;
-      padding: 5px;
-      list-style: none;
-    }
-
-    .letter {
-      display: inline-block;
-      padding: 8px;
-    }
-
-    .word {
-      display: block;
-    }
-
-    .highlight {
-      color: #ea0c1c;
-      font-style: italic;
-      font-weight: bold;
-      text-transform: capitalize;
-    }
-
-    .restart,
-    #leaveRoom {
-      background: red;
-    }
-
-    .restart {
-      visibility: hidden;
     }
   </style>
   <script data-main="js/common" src="js/libs/require.js"></script>
@@ -168,227 +48,172 @@
 
 <body>
   <div id="main">
+
     <div id="lobby">
-      <div class="choices">
-        <p>You can create a new room</p>
-        <input type="text" value="" id="roomName"></input>
-        <button id="createSession" class="btn btn-default">Create session</button>
-      </div>
-      <div class="choices">
-        <p> Or join an existing room
-          <input type="text" value="" id="joinRoom"></input>
-          <button id="joinSession" class="btn btn-default">Join session</button>
-      </div>
+      <header>
+        <h2 class="welcome">Welcome to co-browsing test page</h2>
+      </header>
+      <hr/>
+
+      <p class="instruction">You can test co-browsing features for specific area, such as:
+        <b> Mouse move synchronization, mouse click synchronization, text input</b>
+      </p>
+      <br>
+
+      <p class="instruction">Start by creating a new room or join an existing room.
+        <div class="choices">
+          <div id="newRoom">
+            <p>You can create a new room</p>
+            <form>
+            <input type="text" value="" id="roomName" required></input>
+            <button id="createSession" class="btn btn-primary" type="submit">Create session</button>
+            </form>
+          </div>
+          <br>
+          <div id="joinExisting">
+            <p> Or join an existing room
+            <form>
+              <input type="text" value="" id="joinRoom" required></input>
+              <button id="joinSession" class="btn btn-primary" type="submit">Join session</button>
+              </form
+          </div>
+        </div>
     </div>
 
     <div id="room">
       <header>
-        <!-- Header -->
-        <div class="main-container">
-          <!-- Main container -->
-          <div class="logo-and-cart-wrapper">
-            <!-- Logo and cart -->
-            <a class="logo" href="#">
-              <img src="img/logo.png" alt="Vaimo store logo">
-            </a>
-            <p id="current-room"></p>
-            <div class="cart-wrapper-outer">
-              <div class="cart-wrapper">
-                <a id="btn-show-cart" class="btn btn-show-cart">
-                  <i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>&nbsp;
-                  <span id="total-cart-items" class="total-cart-items"></span>
-                  <span>&nbsp;items in your cart&nbsp;&nbsp;</span>
-                  <span id="total-cart-price" class="total-cart-price"></span>
-                </a>
-                <div class="cart-gap"></div>
-                <div id="cart-items" class="cart-items">
-                  <div id="cart-item"></div>
-                  <div class="cart-checkout-button-wrapper">
-                    <button class="btn btn-default">Go to checkout</button>
-                  </div>
-                </div>
-              </div>
+        <h2 class="welcome"></h2>
+        <button id="leaveRoom" class="btn btn-danger"></button>
+      </header>
+      <p class="instruction">In here you could test co-browsing features with other clients</p>
+      <hr>
 
-              <a id="btn-show-menu" class="btn btn-show-menu">
-                <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
-              </a>
-            </div>
-          </div>
-          <!-- End logo and cart -->
-          <div class="navigation-wrapper" id="navigation-wrapper">
-            <!-- Navigation bar -->
-            <div class="navigation">
-              <a href="/women">Women</a>
-              <a>Men</a>
-              <a>Junior</a>
-              <a>Accessories</a>
-              <div class="dropdown-level1-wrapper">
-                <a class="dropdown-level1-button">Collections</a>
-                <div class="dropdown-level1-content">
-                  <a>2014
-                    <i class="fa fa-caret-right" aria-hidden="true"></i>
-                  </a>
-                  <a>2013
-                    <i class="fa fa-caret-right" aria-hidden="true"></i>
-                  </a>
-                  <div class="dropdown-level2-wrapper">
-                    <a class="dropdown-level2-button">2012
-                      <i class="fa fa-caret-right" aria-hidden="true"></i>
-                    </a>
-                    <div class="dropdown-level2-content">
-                      <a>Summer</a>
-                      <a>Autumn</a>
-                      <a>Winter</a>
-                      <a>Spring</a>
-                    </div>
-                  </div>
-                  <a>2011
-                    <i class="fa fa-caret-right" aria-hidden="true"></i>
-                  </a>
-                </div>
-              </div>
-              <a class="sale">Sale</a>
-              <a class="account">My account</a>
-              <button id="leaveRoom" class="btn btn-default"></button>
-            </div>
-          </div>
-
-
-          <div class="hangman">
+      <div class="features">
+        <p class="instruction">1. Guess the secret word with your friends on the other sides</p>
+        <div class="hangman">
+          <div class="guessContainer">
             <div class="guess"></div>
             <form class="guessForm">
-              <input type="text" class="guessLetter" maxlength="1" placeholder="Enter a letter" />
-              <button type="submit" class="btn btn-default guessButton">Guess</button>
+              <input type="text" class="guessLetter form-control" maxlength="1" placeholder="Enter a letter" />
+              <button type="submit" class="btn btn-info btn-lg guessButton">Guess</button>
               <button class="btn btn-danger restart">Play Again?</button>
             </form>
-
-            <div class="wrong">
-              <div class="wrongLetters"></div>
-            </div>
-            <div class="message">
-              <h1 class="title"></h1>
-              <p class="text"></p>
-
-            </div>
           </div>
 
-          <!-- End navigation bar -->
-          <div id="textArea">
-            <p>Describe your feelings right now</p>
-            <p>
-              <b>Careful someone will see that!!!</b>
-            </p>
-            <textarea></textarea>
-          </div>
-
-        </div>
-        <!-- End main container -->
-      </header>
-      <!-- End Header -->
-
-      <div class="main-container">
-        <!-- Contents -->
-        <!-- <div class="splash-slogan-wrapper">
-          <div class="splash-wrapper">
-            <img src="img/splash.png" alt="" srcset="">
-          </div>
-          <div class="slogan-wrapper">
-            <div class="slogan-heading">
-              <p>This is Vaimo Store</p>
-            </div>
-
-            <div class="slogan-sub-heading">
-              Your one-stop
-              <br>Fashion destination
-            </div>
-            <div class="slogan-description">
-              Shop from over 850 of the best brands, including VAIMO's own label. Plus, get your daily fix of the freshest style, celebrity
-              and music news.
-            </div>
-          </div>
-        </div> -->
-        <!-- End splash and slogan -->
-        <!-- <div class="favourite-wrapper"> 
-          <div class="favourite-title-wrapper">
-            <div class="favourite-divider"></div>
-            <h1 class="favourite-title">Our favourites</h1>
-          </div> 
-        </div> -->
-        <!-- End favorite wrapper -->
-        <div class="products-wrapper">
-          <!-- Products wrapper -->
-          <div class="products">
+          <div class="wrong">
+            <div class="wrongLetters"></div>
           </div>
         </div>
-        <!-- End products wrapper -->
-      </div>
-      <!-- End contents -->
 
-      <footer>
-        <!-- Footer -->
-        <div class="main-container">
-          <div class="footer-inner-wrapper">
-            <!-- Footer inner wrapper -->
-            <div class="footer-component top-categories">
-              <!-- Top categories -->
-              <div class="footer-heading">top categories</div>
-              <div class="footer-content">
-                <ul>
-                  <li>
-                    <a>women</a>
-                  </li>
-                  <li>
-                    <a>men</a>
-                  </li>
-                  <li>
-                    <a>junior</a>
-                  </li>
-                  <li>
-                    <a>accessories</a>
-                  </li>
-                </ul>
-              </div>
+        <br/>
+
+        <p class="instruction">2. Text area and form are working as well</p>
+        <div class="text-form row">
+          <div class="col-md-4 textarea">
+            <textarea rows="4" cols="50"></textarea>
+            <form>
+          </div>
+          <div class="col-md-6 form">
+            <div class="form-group">
+              <label for="exampleInputEmail1">Email address</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
             </div>
-            <!-- End top categories -->
-            <div class="footer-component customer-service">
-              <!-- Customer service -->
-              <div class="footer-heading">customer service</div>
-              <div class="footer-content">
-                <ul>
-                  <li>
-                    <a>returns</a>
-                  </li>
-                  <li>
-                    <a>shipping</a>
-                  </li>
-                  <li>
-                    <a>about us</a>
-                  </li>
-                  <li>
-                    <a>contact us</a>
-                  </li>
-                </ul>
-              </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1">Password</label>
+              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
             </div>
-            <!-- End customer service -->
-            <div class="footer-component newsletter-subscribe">
-              <!-- Newsletter subscribe -->
-              <div class="footer-heading">newsletter subscribe</div>
-              <div class="footer-content">
-                <div class="input-wrapper">
-                  <i class="fa fa-envelope-o"></i>
-                  <input id="email-input" type="text" placeholder="Enter your email address">
+            <!-- <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="exampleCheck1">
+              <label class="form-check-label" for="exampleCheck1">Remember me?</label>
+            </div> -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <small id="warning" class="form-text text-muted">In real application, this button works!!!</small>
+            </form>
+          </div>
+        </div>
+
+        <br/>
+
+        <p class="instruction">3. Click
+          <del>or hover</del> the link below. Other clients will mimic the browser URL</p>
+        <div class="navigation-wrapper" id="navigation-wrapper">
+          <!-- Navigation bar -->
+          <div class="navigation">
+            <button class="btn btn-wanring">
+              <a href="view/women.html">Women</a>
+            </button>
+            <!-- <div class="dropdown-level1-wrapper">
+              <a class="dropdown-level1-button">Collections</a>
+              <div class="dropdown-level1-content">
+                <a>2014
+                  <i class="fa fa-caret-right" aria-hidden="true"></i>
+                </a>
+                <a>2013
+                  <i class="fa fa-caret-right" aria-hidden="true"></i>
+                </a>
+                <div class="dropdown-level2-wrapper">
+                  <a class="dropdown-level2-button">2012
+                    <i class="fa fa-caret-right" aria-hidden="true"></i>
+                  </a>
+                  <div class="dropdown-level2-content">
+                    <a>Summer</a>
+                    <a>Autumn</a>
+                    <a>Winter</a>
+                    <a>Spring</a>
+                  </div>
                 </div>
-                <button id="subscribe-newsletter" type="button" class="btn btn-default btn-subscribe">subscribe</button>
+                <a>2011
+                  <i class="fa fa-caret-right" aria-hidden="true"></i>
+                </a>
               </div>
-              <div id="subscribe-notification" class="subscribe-notification"></div>
-            </div>
-            <!-- End newsletter subscribe -->
+            </div> -->
           </div>
-          <!-- End footer inner wrapper -->
         </div>
-      </footer>
-      <!-- End footer -->
+
+        <br/>
+
+        <p class="instruction coming-soon">There are more coming soon. Deleted text feature will be supported next time</p>
+
+        <!-- <p class="instruction">4. Scroll the paragraph and see interaction between clients</p>
+        <div class="row">
+          <div class="col-md-4">
+            <div id="list-example" class="list-group">
+              <a class="list-group-item list-group-item-action active" href="#list-item-1">Item 1</a>
+              <a class="list-group-item list-group-item-action" href="#list-item-2">Item2</a>
+              <a class="list-group-item list-group-item-action" href="#list-item-3">Item 3</a>
+              <a class="list-group-item list-group-item-action" href="#list-item-4">Item 4</a>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
+              <h4 id="list-item-1">Item 1</h4>
+              <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco
+                eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt
+                tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in.
+                Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat
+                deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit
+                ut eiusmod cupidatat elit dolore.</p>
+              <h4 id="list-item-2">Item 2</h4>
+              <p>Quis magna Lorem anim amet ipsum do mollit sit cillum voluptate ex nulla tempor. Laborum consequat non elit
+                enim exercitation cillum aliqua consequat id aliqua. Esse ex consectetur mollit voluptate est in duis laboris
+                ad sit ipsum anim Lorem. Incididunt veniam velit elit elit veniam Lorem aliqua quis ullamco deserunt sit
+                enim elit aliqua esse irure. Laborum nisi sit est tempor laborum mollit labore officia laborum excepteur
+                commodo non commodo dolor excepteur commodo. Ipsum fugiat ex est consectetur ipsum commodo tempor sunt in
+                proident.
+              </p>
+              <h4 id="list-item-3">Item 3</h4>
+              <p>Quis anim sit do amet fugiat dolor velit sit ea ea do reprehenderit culpa duis. Nostrud aliqua ipsum fugiat
+                minim proident occaecat excepteur aliquip culpa aute tempor reprehenderit. Deserunt tempor mollit elit ex
+                pariatur dolore velit fugiat mollit culpa irure ullamco est ex ullamco excepteur.</p>
+              <h4 id="list-item-4">Item 4</h4>
+              <p>Quis anim sit do amet fugiat dolor velit sit ea ea do reprehenderit culpa duis. Nostrud aliqua ipsum fugiat
+                minim proident occaecat excepteur aliquip culpa aute tempor reprehenderit. Deserunt tempor mollit elit ex
+                pariatur dolore velit fugiat mollit culpa irure ullamco est ex ullamco excepteur.</p>
+            </div>
+          </div>
+        </div> -->
+
+      </div>
     </div>
   </div>
 </body>

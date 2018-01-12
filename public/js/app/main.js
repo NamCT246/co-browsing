@@ -15,6 +15,10 @@ define(
        * Connect to the signalling server *
        ************************************/
 
+      requirejs([
+        'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
+      ]);
+
       var currentRoom, socketId, color;
 
       socket.connection.on('connect', function() {
@@ -202,10 +206,12 @@ define(
         var top = offset.top + data.mouseClickData.offsetY;
         var left = offset.left + data.mouseClickData.offsetX;
 
-        $(target).trigger({
-          type: 'click',
-          internalClick: true,
-        });
+        eventMaker.performClick(target);
+
+        // $(target).trigger({
+        //   type: 'click',
+        //   internalClick: true,
+        // });
         showMouseClick(top, left);
       });
 

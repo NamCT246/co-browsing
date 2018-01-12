@@ -196,7 +196,7 @@ define(['require', 'jquery', 'lodash'], (require, $, _) => {
       this.wrd = undefined;
       this.init(this.words);
       this.hm.find('.guessLetter').focus();
-      this.guess.prop('disabled', false);
+      this.guessLetterInput.prop('disabled', false);
     },
 
     _letters: function(word) {
@@ -211,11 +211,10 @@ define(['require', 'jquery', 'lodash'], (require, $, _) => {
     },
 
     win: function() {
-      var rating = this.rating();
       this.msgTitle.html('You win');
       this.showMsg();
       this.playSound('winSound');
-      this.guess.prop('disabled', true);
+      this.guessLetterInput.prop('disabled', true);
     },
 
     lose: function() {
@@ -226,7 +225,7 @@ define(['require', 'jquery', 'lodash'], (require, $, _) => {
       );
       this.showMsg();
       this.playSound('loseSound');
-      this.guess.prop('disabled', true);
+      this.guessLetterInput.prop('disabled', true);
     },
   };
 

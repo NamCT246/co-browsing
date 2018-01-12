@@ -1,0 +1,194 @@
+#main {
+  position: relative;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  /* top: 20px; */
+}
+
+#lobby {
+  /* position: absolute; */
+  /* top: 100px; */
+  /* left: 20vw; */
+  padding: 10px;
+}
+
+#lobby input {
+  display: block;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid black;
+  outline: none;
+  margin: 0 auto;
+  padding-bottom: 15px;
+  width: 400px;
+  text-align: center;
+}
+
+.choices {
+  /* display: inline-block; */
+  /* margin-top: 30px; */
+  margin: 0 auto;
+  text-align: center;
+  /* position: absolute; */
+  padding: 80px;
+}
+
+.choices button {
+  margin: 20px;
+  padding: 15px;
+  font-size: smaller;
+}
+
+.choices p {
+  margin: 20px;
+  font-size: larger;
+  /* margin-bottom: 10px; */
+  /* display: inline-block; */
+}
+
+#room {
+  /* display: none; */
+  /* margin: 0 auto; */
+  /* text-align: center; */
+  padding: 10px;
+  background-color: azure;
+}
+
+header {
+  margin: 0 auto;
+  text-align: center;
+  padding: 10px;
+}
+
+h2.welcome {
+  font-size: 28px;
+}
+
+p.instruction {
+  font-size: 20px;
+  font-style: italic;
+  margin: 20px;
+}
+
+b {
+  font-size: 23px;
+}
+
+#leaveRoom {
+  float: right;
+}
+
+#textArea {
+  margin-top: 50px;
+  width: 100%;
+  margin-left: 20px;
+}
+
+textarea {
+  width: 300px;
+  height: 200px;
+  margin: 20px;
+}
+
+.coming-soon {
+  margin: 20px auto;
+  padding: 10px;
+  background-color: aquamarine;
+  float: right;
+}
+
+.hangman {
+  margin: 20px auto;
+  text-align: center;
+  /* margin-bottom: 20px; */
+}
+
+.guess,
+.wrong {
+  /* display: block; */
+  /* margin: 0 auto; */
+  /* text-align: center; */
+}
+
+.guessForm,
+.message {
+  /* float: right; */
+  /* display: inline-block; */
+  /* margin: 0 auto; */
+  padding: 20px;
+  margin: 20px auto 0;
+}
+
+button.btn.btn-default.guessButton {
+  padding: 8px;
+  margin-top: -5px;
+}
+
+.guessLetter {
+  width: 200px;
+  margin: 20px 12px;
+  display: inline-block;
+  font-size: 20px;
+}
+
+.word {
+  /* background: aquamarine; */
+  padding: 0;
+}
+
+.wrongLetters {
+  /* background: beige; */
+  padding: 0;
+}
+
+.wrongLetters p {
+  /* background: #e41c2b; */
+  padding: 5px;
+}
+
+.wrongLetters li {
+  display: inline-block;
+  font-size: 20px;
+  padding: 5px;
+  list-style: none;
+}
+
+.letter {
+  display: inline-block;
+  padding: 8px;
+  border-bottom: 5px solid;
+  margin: 0 10px;
+  font-size: 40px;
+  /* padding: 10px; */
+  /* transition: .5s; */
+  text-transform: uppercase;
+}
+
+.word {
+  display: block;
+}
+
+.highlight {
+  color: #ea0c1c;
+  font-style: italic;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.restart,
+#leaveRoom {
+  background: red;
+}
+
+.restart {
+  visibility: hidden;
+}
+
+.scrollspy-example {
+  position: relative;
+  height: 200px;
+  margin-top: 0.5rem;
+  overflow: auto;
+}

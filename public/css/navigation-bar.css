@@ -2,12 +2,14 @@
 
 .navigation-wrapper {
   position: relative;
+  margin: 20px;
 }
 
 .navigation {
   overflow: hidden;
   background-color: transparent;
-  border-bottom: 5px solid #0f1922;
+  /* border-bottom: 5px solid #0f1922; */
+  width: 300px;
 }
 
 .navigation a {
@@ -33,7 +35,6 @@
 .navigation .account {
   float: right;
 }
-
 
 /* Dropdown level 1 */
 
@@ -72,7 +73,6 @@
   transform: translateY(-50%);
 }
 
-
 /* Dropdown level 2 */
 
 .dropdown-level1-wrapper .dropdown-level2-content {
@@ -105,7 +105,6 @@
 .dropdown-level2-wrapper:hover .dropdown-level2-content {
   display: block;
 }
-
 
 /* Responsive styles */
 
@@ -208,6 +207,8 @@
   }
 }
 
-@media screen and (min-width: 769px) and (max-width: 939px) {}
+@media screen and (min-width: 769px) and (max-width: 939px) {
+}
 
-@media screen and (min-width: 940px) {}
+@media screen and (min-width: 940px) {
+}
