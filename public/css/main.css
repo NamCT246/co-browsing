@@ -121,9 +121,8 @@ textarea {
   margin: 20px auto 0;
 }
 
-button.btn.btn-default.guessButton {
-  padding: 8px;
-  margin-top: -5px;
+.guessButton {
+  margin-top: -6px;
 }
 
 .guessLetter {
