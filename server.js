@@ -42,7 +42,6 @@ io.on('connection', socket => {
   });
 
   socket.on('progress', function(data) {
-    console.log(data);
     socket.to(data.to).emit('progress', data);
   });
 

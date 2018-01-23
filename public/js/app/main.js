@@ -134,7 +134,7 @@ define(
           .attr('id', cursorId)
           .addClass('cursor')
           .css({
-            'background-color': '#000',
+            'background-color': ui.getUserColor(id),
             left: '50%',
             top: '50%',
           })
