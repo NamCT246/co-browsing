@@ -1,23 +1,48 @@
 {
-  "extends": ["prettier", "airbnb-base"],
+  "extends": [
+    "prettier",
+    "airbnb-base"
+  ],
   "parserOptions": {
-    "ecmaVersion": 5,
+    "ecmaVersion": 6,
     "sourceType": "script",
     "ecmaFeatures": {}
   },
   "env": {
     "amd": true
   },
-  "plugins": ["requirejs", "prettier"],
+  "plugins": [
+    "requirejs",
+    "prettier"
+  ],
   "rules": {
-    "object-curly-spacing": ["warn", "never"],
-    "curly": ["error", "all"],
-    "array-element-newline": ["error", {"multiline": true, "minItems": 8}],
+    "object-curly-spacing": [
+      "warn",
+      "never"
+    ],
+    "curly": [
+      "error",
+      "all"
+    ],
+    "array-element-newline": [
+      "error",
+      {
+        "multiline": true,
+        "minItems": 8
+      }
+    ],
     "max-len": [
       "error",
-      {"code": 80, "ignoreUrls": true, "ignoreComments": true}
+      {
+        "code": 80,
+        "ignoreUrls": true,
+        "ignoreComments": true
+      }
     ],
-    "brace-style": ["error", "1tbs"],
+    "brace-style": [
+      "error",
+      "1tbs"
+    ],
     "comma-dangle": [
       "error",
       {
@@ -31,7 +56,7 @@
     "prettier/prettier": [
       "error",
       {
-        "trailingComma": "es5",
+        "trailingComma": "es6",
         "singleQuote": true,
         "bracketSpacing": false
       }

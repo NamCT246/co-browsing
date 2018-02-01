@@ -1,6 +1,6 @@
 define(
-  ['require', 'jquery', 'hangman', 'socket'],
-  (require, $, hangman, socket) => {
+  ['jquery', 'hangman', 'socket'],
+  ($, hangman, socket) => {
     'use strict';
 
     var ui = {};
@@ -19,7 +19,7 @@ define(
       '#d300e7',
     ];
 
-    ui.getUserColor = function(username) {
+    ui.getUserColor = function (username) {
       var hash = 7;
       for (var i = 0; i < username.length; i++) {
         hash = username.charCodeAt(i) + (hash << 5) - hash;
@@ -29,7 +29,7 @@ define(
       return COLORS[index];
     };
 
-    ui.updateProgress = function(data) {
+    ui.updateProgress = function (data) {
       console.log(data);
       hangman.currWord = hangman.wrd = hangman._wordData(data.word);
       hangman.wrongGuesses = data.wrongGuesses;
@@ -37,7 +37,7 @@ define(
       hangman.redraw(data);
     };
 
-    ui.sendProgress = function(user) {
+    ui.sendProgress = function (user) {
       var currentWord = hangman.wrd,
         rightLetters = hangman.rightGuesses,
         wrongGuesses = hangman.wrongGuesses,
@@ -48,8 +48,8 @@ define(
           to: user,
         };
 
-      $.each(currentWord.letters, function(key, val) {
-        $.each(rightLetters, function(k, v) {
+      $.each(currentWord.letters, function (key, val) {
+        $.each(rightLetters, function (k, v) {
           if (v === val.letter.toLowerCase()) {
             progress.shownLetters.push({
               letter: val.letter,

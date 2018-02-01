@@ -7,6 +7,9 @@ define(['socket.io'], io => {
 
   var socket = {
     connection: socketConnection,
+    getClientId: function () {
+      return this.connection.id;
+    }
   };
 
   return socket;

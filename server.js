@@ -37,11 +37,11 @@ io.on('connection', socket => {
 
   console.log(socket.id + ' has joined');
 
-  socket.on('message', function(data) {
+  socket.on('message', function (data) {
     console.log(data);
   });
 
-  socket.on('progress', function(data) {
+  socket.on('progress', function (data) {
     socket.to(data.to).emit('progress', data);
   });
 
@@ -57,9 +57,9 @@ io.on('connection', socket => {
 
   function leaveRoom(oldRoom) {
     var leaver = {
-        id: socket.id,
-        username: socket.id,
-      },
+      id: socket.id,
+      username: socket.id,
+    },
       room = getRoomByName(oldRoom);
 
     if (room) {
@@ -109,14 +109,14 @@ io.on('connection', socket => {
   }
 
   function getRoomByName(roomName) {
-    var room = _.find(rooms, {name: roomName});
+    var room = _.find(rooms, { name: roomName });
     if (!room) return;
 
     return room;
   }
 
   function getRoomBySocketId(id) {
-    return _.filter(rooms, function(room) {
+    return _.filter(rooms, function (room) {
       return room.userId.indexOf(id) === 0;
     });
   }
@@ -131,7 +131,7 @@ io.on('connection', socket => {
     };
   }
 
-  socket.on('createRoom', function(room, ack) {
+  socket.on('createRoom', function (room, ack) {
     if (currRoom && room !== currRoom) {
       leaveRoom(currRoom);
     }
@@ -149,9 +149,10 @@ io.on('connection', socket => {
       type: 'Ok',
       room: room,
     });
+    console.log("ok " + room);
   });
 
-  socket.on('joinRoom', function(room, ack) {
+  socket.on('joinRoom', function (room, ack) {
     if (!getRoomByName(room)) {
       ack({
         type: 'Abort',
@@ -179,7 +180,7 @@ io.on('connection', socket => {
     });
   });
 
-  socket.on('leaveRoom', function(room, ack) {
+  socket.on('leaveRoom', function (room, ack) {
     leaveRoom(room);
     ack({
       type: 'Ok',
@@ -187,7 +188,7 @@ io.on('connection', socket => {
     });
   });
 
-  socket.on('disconnect', function() {
+  socket.on('disconnect', function () {
     leaveRoom(currRoom);
     --num_client;
     currRoom = undefined;
@@ -198,28 +199,28 @@ io.on('connection', socket => {
     }
   });
 
-  socket.on('mouseMove', function(data) {
+  socket.on('mouseMove', function (data) {
     socket.in(data.room).emit('onMouseMove', {
       id: socket.id,
       mouseMoveData: data,
     });
   });
 
-  socket.on('mouseClick', function(data) {
+  socket.on('mouseClick', function (data) {
     socket.in(data.room).emit('onMouseClick', {
       id: socket.id,
       mouseClickData: data,
     });
   });
 
-  socket.on('mouseScroll', function(data) {
+  socket.on('mouseScroll', function (data) {
     socket.in(data.room).emit('onMouseScroll', {
       id: socket.id,
       mouseScrollData: data,
     });
   });
 
-  socket.on('inputChanged', function(data) {
+  socket.on('inputChanged', function (data) {
     socket.in(data.room).emit('onInputChanged', {
       id: socket.id,
       inputData: data,
