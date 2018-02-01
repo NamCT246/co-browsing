@@ -176,7 +176,12 @@ define([
         const top = offset.top + data.mouseClickData.offsetY;
         const left = offset.left + data.mouseClickData.offsetX;
 
-        eventMaker.performClick(target);
+        // eventMaker.performClick(target);
+        // Last time this doesnt trigger when chaing URl
+        $(target).trigger({
+            type: 'click',
+            internalClick: true,
+        });
         showMouseClick(top, left);
     });
 
